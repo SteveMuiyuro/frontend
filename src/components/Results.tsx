@@ -9,11 +9,13 @@ type ResultsProps = {
 };
 
 function Results({ result }: ResultsProps) {
+
+  console.log(result.product_image_url)
   return (
     <div className="text-gray-800 flex gap-[50px] ml-20">
       <img
         className="object-cover w-[100px] h-[150px]"
-        src={result.product_image_url}
+        src={result.product_image_url === "/static/placeholder.png" ? "./images/placeholder.png" : result.product_image_url}
         alt={result.product_name}
       />
       <div className="flex flex-col">
