@@ -165,7 +165,7 @@ const ChatBox: React.FC = () => {
             ) : msg.type === "bot" && msg.text ? (
               // For general conversation response
               <div className="flex gap-[20px] justify-start  w-full">
-                <div className="w-[32px] h-[32px] rounded-full bg-red-700 flex-shrink-0"></div>
+                <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500  flex-shrink-0"></div>
                 <div className="p-[12px] text-start bg-gray-300 flex rounded-lg">
                   {msg.text}
                 </div>
