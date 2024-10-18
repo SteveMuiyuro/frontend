@@ -10,7 +10,7 @@ type ResultsProps = {
 
 function Results({ result }: ResultsProps) {
 
-  console.log(result.product_image_url)
+ 
   return (
     <div className="text-gray-800 flex gap-[50px] ml-20">
       <img

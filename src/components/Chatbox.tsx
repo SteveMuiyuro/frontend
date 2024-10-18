@@ -146,7 +146,7 @@ const ChatBox: React.FC = () => {
               // For product-related JSON response
               <div className="flex flex-col gap-[20px] justify-center items-baseline w-full">
                 <div className="flex items-center justify-start w-full gap-5">
-                  <div className="w-[32px] h-[32px] rounded-full bg-red-700"></div>
+                  <div className="w-[32px] h-[32px] rounded-full bg-red-700 flex flex-shrink-0"></div>
                   {/* Display the introductory message */}
                   {introMessage && (
                     // <div className="p-2 mb-4 text-start bg-gray-200 rounded-lg flex items-center">
