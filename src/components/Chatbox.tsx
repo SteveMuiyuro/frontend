@@ -166,7 +166,7 @@ const ChatBox: React.FC = () => {
               // For general conversation response
               <div className="flex gap-[20px] justify-start w-[300px]  md:w-full">
                 <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500  flex-shrink-0"></div>
-                <div className="p-[12px] max-w-[400px] text-start bg-gray-300 flex rounded-lg">
+                <div className="p-[12px] max-w-[400px] md:max-w-[610px] md:flex md:text-justify text-start bg-gray-300 flex rounded-lg">
                   {msg.text}
                 </div>
               </div>
@@ -189,7 +189,7 @@ const ChatBox: React.FC = () => {
         {/* Loading spinner */}
         {isLoading && (
           <div className="flex gap-[20px] justify-start w-full mt-[70px]">
-            <div className="w-[32px] h-[32px] rounded-full bg-red-700"></div>
+            <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500  "></div>
             <div className="flex flex-col gap-5 w-full">
               <div className="flex justify-start items-center text-gray-600 gap-2">
                 <AiOutlineLoading3Quarters className="animate-spin" size={24} />
