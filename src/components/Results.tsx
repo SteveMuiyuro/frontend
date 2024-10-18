@@ -11,9 +11,9 @@ type ResultsProps = {
 function Results({ result }: ResultsProps) {
 
   return (
-    <div className="text-gray-800 flex gap-[50px] ml-20">
+    <div className="text-gray-800 flex items-start flex-col md:gap-[50px] ml-10 mb-3 md:ml-20 mr-10">
       <img
-        className="object-cover w-[100px] h-[150px]"
+        className="object-cover w-[100px] h-[120px] md:w-[100px] md:h-[150px] mb-5"
         src={result.product_image_url === "/static/placeholder.png" ? "./images/placeholder.png" : result.product_image_url}
         alt={result.product_name}
       />
@@ -21,7 +21,7 @@ function Results({ result }: ResultsProps) {
         <p>{result.product_name}</p>
         <p className="font-bold">{result.price}</p>
         <p className="font-medium py-1">{result.supplier}</p>
-        <div className="grid grid-cols-2 gap-5 mb-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-1">
           <div className="flex justify-start items-center gap-2">
             <IoLocationOutline className="flex  flex-shrink-0" />
             <p className="text-sm">{result.location}</p>
@@ -31,12 +31,12 @@ function Results({ result }: ResultsProps) {
             <p className="text-sm break-words">{result.supplier_contact === "" ? "Not Available": result.supplier_contact} </p>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 items-center justify-center md:grid-cols-2 max-w-[300px]  gap-4">
           <div className="flex justify-start items-center gap-2">
             <MdOutlineEmail className="flex  flex-shrink-0" />
             <p className="text-sm">{result.email === "" ? "Not Available": result.email}</p>
           </div>
-          <div className="flex justify-start items-center gap-2 w-full">
+          <div className="flex justify-start items-center gap-2 max-w-[300px] md:w-full">
             <IoIosLink className="flex flex-shrink-0" />
             <a
               href={result.website }

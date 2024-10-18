@@ -136,7 +136,7 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen relative">
-      <div className="chat-messages w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar">
+      <div className="chat-messages ml-8 md:w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -150,12 +150,12 @@ const ChatBox: React.FC = () => {
                   {/* Display the introductory message */}
                   {introMessage && (
                     // <div className="p-2 mb-4 text-start bg-gray-200 rounded-lg flex items-center">
-                    <p className="bg-transparent">{introMessage}</p>
+                    <p className="bg-transparent mr-10">{introMessage}</p>
                     // </div>
                   )}
                 </div>
                 <div className="flex flex-col items-center w-full">
-                  <div className="flex flex-col gap-5 w-full flex-wrap items-start">
+                  <div className="flex flex-col gap-5 w-[300px] md:w-full flex-wrap items-start">
                     {msg.data.map((result, i) => (
                       <Results key={i} result={result} />
                     ))}
@@ -164,21 +164,21 @@ const ChatBox: React.FC = () => {
               </div>
             ) : msg.type === "bot" && msg.text ? (
               // For general conversation response
-              <div className="flex gap-[20px] justify-start  w-full">
+              <div className="flex gap-[20px] justify-start w-[300px]  md:w-full">
                 <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500  flex-shrink-0"></div>
-                <div className="p-[12px] text-start bg-gray-300 flex rounded-lg">
+                <div className="p-[12px] max-w-[400px] text-start bg-gray-300 flex rounded-lg">
                   {msg.text}
                 </div>
               </div>
             ) : (
               // User message
-              <div className="flex gap-[20px] justify-start items-center w-full">
+              <div className="flex gap-[20px] justify-start items-center md:w-full">
                 <img
                   className="w-[32px] h-[32px]   rounded-full"
                   src="./images/Profile_image.jpeg"
                   alt=""
                 />
-                <div className="p-[12px] text-start bg-gray-300 flex rounded-lg">
+                <div className="p-[5px] max-w-[300px] mr-10 px-[10px] md:p-[12px] text-start bg-gray-300 flex rounded-lg">
                   {msg.text}
                 </div>
               </div>
@@ -205,7 +205,7 @@ const ChatBox: React.FC = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="w-[680px] rounded fixed bottom-5 box-border"
+        className="md:w-[680px] rounded fixed bottom-5 box-border"
       >
         {attachedFile && (
           <div className="flex items-center justify-between w-[15%] ml-6 mb-2 p-2 border border-gray-300 bg-transparent  border-1 absolute bottom-16 rounded-md">
@@ -220,8 +220,8 @@ const ChatBox: React.FC = () => {
         <textarea
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Ask about a product or anything else..."
-          className="placeholder: outline-none rounded-[40px] overflow-hidden w-full h-full resize-none bg-gray-300 px-14 pr-14 box-border py-4 relative"
+          placeholder="Ask about a product..."
+          className="md:placeholder: outline-none rounded-[40px] placeholder:text-sm placeholder:px-2  overflow-hidden w-[300px] h-[50%]  md:w-full  md:h-full resize-none bg-gray-300 px-10 md:px-14 md:pr-14 box-border py-4 relative"
           ref={textAreaRef}
           rows={1}
           onKeyDown={(e) => {
@@ -249,7 +249,7 @@ const ChatBox: React.FC = () => {
         )}
 
         <button
-          className={`absolute rounded-full h-[32px] w-[32px] bottom-5 right-3 flex justify-center items-center ${
+          className={`absolute rounded-full h-[32px] w-[32px]  bottom-5 right-3 md:bottom-5 md:right-3 flex justify-center items-center ${
             isLoading
               ? "bg-[#072630]"
               : inputValue || attachedFile
@@ -280,7 +280,7 @@ const ChatBox: React.FC = () => {
 
         <button
           type="button"
-          className="absolute rounded-full h-[32px] w-[32px] bottom-4 left-2 flex justify-center items-center text-lg"
+          className="absolute rounded-full h-[32px] w-[32px] bottom-5 left-2 md:bottom-4 md:left-2 flex justify-center items-center md:text-lg"
           onClick={handleAttachClick}
         >
           <MdOutlineAttachFile className="text-gray-500 h-[25px] w-[25px] rotate-45 cursor-pointer" />
