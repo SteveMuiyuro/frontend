@@ -25,12 +25,10 @@ const ChatBox: React.FC = () => {
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
-  const [submittedFiles, setSubmittedFiles] = useState<File[]>([]);
   const [introMessage, setIntroMessage] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [submittedFileUrl, setSubmittedFileUrl] = useState<string | null>
-  (null); // To store file image URL
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -48,16 +46,6 @@ const ChatBox: React.FC = () => {
     console.log(userMessage)
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-
-    // Reset attachment after submission
-
-
-    // if (attachedFile) {
-    //   setSubmittedFiles((prevFiles) => [...prevFiles, attachedFile]);
-    //     // Store the file's URL for later use
-    // const fileUrl = URL.createObjectURL(attachedFile);
-    // setSubmittedFileUrl(fileUrl);  // Store the URL of the attached file
-    // }
 
     setInputValue("");
     setAttachedFile(null);
