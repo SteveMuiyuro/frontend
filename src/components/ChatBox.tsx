@@ -314,7 +314,7 @@ const ChatBox: React.FC = () => {
         <textarea
           value={inputValue}
           onChange={handleInputChange}
-          placeholder="Ask about a product..."
+          placeholder="Ask about a product price or anything..."
           className="md:placeholder:outline-none rounded-[40px] placeholder:text-sm w-[300px] md:w-full md:min-h-[68px] resize-none bg-gray-300 px-10 md:px-14 md:pr-14 relative py-6 outline-none"
           ref={textAreaRef}
           rows={1}
