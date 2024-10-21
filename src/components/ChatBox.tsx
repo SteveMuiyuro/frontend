@@ -65,7 +65,7 @@ const ChatBox: React.FC = () => {
         },
         body: JSON.stringify({
           prompt: `${inputValue} ${fileContent ? fileContent : ""}`,
-          limit: 4,
+          limit: 8,
         }),
         signal: controller.signal,
       } as RequestInit);
@@ -135,6 +135,7 @@ const ChatBox: React.FC = () => {
             const pageText = textContent.items.map((item: any) => item.str).join(" ");
             extractedText += pageText + "\n";
           }
+          console.log(extractedText)
 
           setFileContent(extractedText);
         } catch (error) {
