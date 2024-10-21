@@ -294,7 +294,7 @@ const ChatBox: React.FC = () => {
       >
         {/* Display attached file */}
         {attachedFile && (
-          <div className="flex items-center justify-between w-[300px] md:w-[250px] ml-6 mb-2 p-2 border border-gray-300 bg-white rounded-md shadow-sm relative mt-2 ">
+          <div className="flex items-center justify-between w-[250px] md:w-[250px] ml-6 mb-2 p-2 border border-gray-300 bg-white rounded-md shadow-sm relative mt-2  ">
             <div className="flex items-center gap-3">
               <div className="bg-blue-500 p-2 rounded-lg">
                 <MdOutlineAttachFile className="text-white h-6 w-6 rotate-45" />
