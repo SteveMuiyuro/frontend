@@ -13,4 +13,5 @@ export type Supplier = {
     type: 'user' | 'bot';
     text?: string; // For user text and error messages
     data?: Supplier[]; // For bot responses with supplier data
+    files?: File[];  // New field for attachments
   };
