@@ -1,5 +1,4 @@
 import ChatBox from "./components/ChatBox"
-
 import './index.css'
 
 function App() {
@@ -7,9 +6,9 @@ function App() {
 
   return (
     <div>
-      <ChatBox/>
+      <ChatBox />
     </div>
-  )
+  );
 }
 
 export default App

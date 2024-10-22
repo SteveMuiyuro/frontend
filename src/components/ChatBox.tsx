@@ -13,7 +13,7 @@ import Results from "./Results";
 import { FaDownload, FaTimes } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
-
+import Files from "../components/Files"
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/node_modules/pdfjs-dist/build/pdf.worker.mjs`;
 
@@ -73,6 +73,7 @@ const ChatBox: React.FC = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      console.log(response)
 
       const data = await response.json();
 
@@ -181,7 +182,8 @@ const ChatBox: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen relative">
-    <div className="chat-messages ml-8 md:w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar">
+      {messages.length === 0 && <Files/>}
+    <div className="chat-messages ml-8 md:w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar ">
       {messages.map((msg, index) => (
         <div
           key={index}
