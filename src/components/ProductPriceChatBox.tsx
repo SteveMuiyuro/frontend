@@ -60,8 +60,8 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'http://localhost:5000/product_prices'
-    const chat_endpoint = 'http://localhost:5000/chat'
+    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
+    const chat_endpoint = 'https://backend-api-pjri.onrender.com/chat'
 
     try {
 
