@@ -40,7 +40,7 @@ const suggested = [
 const suggestions = suggested.map((item, i) => (<Suggested key={i}  title={item.title} icon={item.icon} />));
 
   return (
-    <div className="md:w-[680px] min-w-[300px] h-[80vh] flex flex-col justify-end items-center gap-5 ">
+    <div className="md:w-[680px] min-w-[300px] fixed h-[80vh] flex flex-col justify-end items-center gap-5 ">
 
         <div className="flex flex-col justify-center gap-2">
         <p className="text-[#838F94] text-sm">Hi Paul Umukoro! How can I help you today</p>
