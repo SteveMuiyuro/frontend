@@ -38,3 +38,12 @@ export type ContextTypes = {
   isProductPrice:boolean
   setProductPrice:React.Dispatch<React.SetStateAction<boolean>>
 }
+
+
+export type Data = {
+    exit?: boolean; // Boolean to indicate end of session
+    response: string; // Final message to be displayed when exiting
+    next_prompt?: string; // Optional next prompt if session continues
+    suppliers?: Supplier[]; // Optional suppliers array if fetching supplier data
+    message?: string; // Optional message field if `isProductPrice` is false
+}

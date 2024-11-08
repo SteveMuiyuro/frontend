@@ -9,7 +9,7 @@ import React, {
 import { FaArrowUp } from "react-icons/fa6";
 import { MdOutlineAttachFile } from "react-icons/md";
 import { FaStop } from "react-icons/fa6";
-import { Message } from "../types";
+import { Message, Data } from "../types";
 import Results from "./Results";
 import { FaDownload, FaTimes } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -156,7 +156,7 @@ const ProductPriceChatBox: React.FC = () => {
   };
 
 
-  const resetStateAndExit = (data) => {
+  const resetStateAndExit = (data:Data) => {
     // Add the final bot message to indicate the end of the session
     setMessages((prevMessages) => [
       ...prevMessages,
