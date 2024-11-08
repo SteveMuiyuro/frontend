@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import ProductPricesChatBox from "../src/components/ProductPriceChatBox"
+import ProductPricesChatBox from "./components/ProductPricesChatBox"
 import './index.css'
 import { ContextTypes, Message } from "./types";
 

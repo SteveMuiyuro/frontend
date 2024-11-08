@@ -62,7 +62,7 @@ const ProductPriceChatBox: React.FC = () => {
     setAbortController(controller);
 
     const product_prices_endpoint = 'https://ai-feature-backend.onrender.com/product_prices'
-    const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request'
+    const create_request_endpoint = 'https://ai-feature-backend.onrender.com:5000/create_request'
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
@@ -110,6 +110,7 @@ const ProductPriceChatBox: React.FC = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+      console.log(data)
 
           // Handle end of session
       if (data.exit === true) {
