@@ -27,14 +27,14 @@ function Results({ result }: ResultsProps) {
             <p className="text-sm">{result.location}</p>
           </div>
           <div className="flex justify-start items-center gap-2">
-            <RiPhoneLine className="flex  flex-shrink-0" />
-            <p className="text-sm break-words">{result.supplier_contact === "" ? "Not Available": result.supplier_contact} </p>
+            <RiPhoneLine className="flex flex-shrink-0" />
+            <p className="text-xsm break-words">{result.supplier_contact === "" ? "Not Available": result.supplier_contact} </p>
           </div>
         </div>
         <div className="grid grid-cols-1 items-center justify-center md:grid-cols-2 gap-1 md:gap-5">
           <div className="flex justify-start items-center gap-2">
             <MdOutlineEmail className="flex  flex-shrink-0" />
-            <p className="text-sm">{result.email === "" ? "Not Available": result.email}</p>
+            <p className="text-sm break-words"  style={{ wordBreak: "break-all" }}>{result.email === "" ? "Not Available": result.email}</p>
           </div>
           <div className="flex justify-start items-center gap-2 max-w-[300px] md:max-w-[680px]">
             <IoIosLink className="flex flex-shrink-0" />

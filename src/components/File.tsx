@@ -5,6 +5,7 @@ function File({ item}: { item: string}) { // Define the prop type correctly
 
   const context = useContext(Context)
 
+
   if (!context) {
     throw new Error("File component must be used within a ContextProvider");
   }
@@ -13,7 +14,7 @@ function File({ item}: { item: string}) { // Define the prop type correctly
   return (
     <div className="flex justify-start items-center gap-5">
       <BsFileEarmarkCheck size={24} className="text-green-700"/>
-      {item === "Create a Request" ? <button onClick={handleCreatePurchaseRequest}>{item}</button> : <button>{item}</button> }
+     {<button onClick={() => handleCreatePurchaseRequest(item)}>{item}</button>}
     </div>
   );
 }

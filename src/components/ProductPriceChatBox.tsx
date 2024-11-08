@@ -29,13 +29,14 @@ const ProductPriceChatBox: React.FC = () => {
   const [fileContent, setFileContent] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isExit, setIsExit] = useState(false);
+  const [nextPrompt, setNextPrompt] = useState<string | null>(null)
 
   const context = useContext(Context);
 
   if (!context) {
     throw new Error("Items must be used within a context provider");
   }
-  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading} = context;
+  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice} = context;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -60,52 +61,84 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
-    const chat_endpoint = 'https://backend-api-pjri.onrender.com/chat'
+    const product_prices_endpoint = 'https://ai-feature-backend.onrender.com/product_prices'
+    const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request'
+    const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
+    const check_progress_endpoint = 'http://localhost:5000/check_progress'
+    const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
+    const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
+    const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
+    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
+
 
     try {
-
-      const response = await fetch(isRequestLoading ? chat_endpoint : product_prices_endpoint, {
+      console.log(isProductPrice)
+      const response = await fetch( isRequestLoading
+        ? create_request_endpoint
+        : isAssignWorkflow
+        ? assign_workflow_endpoint
+        : isCheckProgress
+        ? check_progress_endpoint
+        : isCreateRFQ
+        ? create_rfq_endpoint
+        : isRecommendQuotes
+        ? recommend_quotes_endpoint
+        : isCreatePO
+        ? create_purchase_order_endpoint
+        : isProductPrice
+        ? get_product_price_endpoint
+        : product_prices_endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(
-          !isRequestLoading ? {
-          prompt: `${inputValue} ${fileContent ? fileContent : ""}`,
-          limit: 8,
-        }: {
-          message: inputValue,
-        }),
+          isRequestLoading ||
+          isAssignWorkflow ||
+          isCheckProgress ||
+          isCreatePO ||
+          isCreateRFQ ||
+          isRecommendQuotes||
+          isProductPrice
+            ? { message: inputValue }
+            : { prompt: `${inputValue} ${fileContent || ""}`, limit: 8 }
+        ),
         signal: controller.signal,
       } as RequestInit);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-
       const data = await response.json();
 
-
+          // Handle end of session
       if (data.exit === true) {
-        setRequestLoading(false);
-        setIsExit(true);  // Set exit condition
-        setTimeout(() => {
-            setMessages([]);  // Clear messages after 3 seconds
-            setIsExit(false); // Reset isExit
-        }, 3000);
+        resetStateAndExit(data);
+        return;
       }
 
-      if (data.message) {
-        setIntroMessage(data.message);
-      }
-
-      const botMessage: Message = data.suppliers
-        ? { type: "bot", data: data.suppliers }
-        : { type: "bot", text: data.response };
+      if (isProductPrice) {
+        setIntroMessage(data.response.message);
+        const botMessage: Message = data.response.suppliers
+        ? { type: "bot", data: data.response.suppliers }
+        : { type: "bot", text: data.response}
 
       setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+      } else {
+        setIntroMessage(data.message);
+        const botMessage: Message = data.suppliers
+        ? { type: "bot", data: data.suppliers }
+        : { type: "bot", text: data.response}
+
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+
+      }
+
+      if(data.next_prompt){
+        setNextPrompt(data.next_prompt)
+      }
+
     } catch (error: unknown) {
       if (error instanceof Error && error.name === "AbortError") {
         console.log("Fetch aborted");
@@ -120,6 +153,32 @@ const ProductPriceChatBox: React.FC = () => {
 
     setIsLoading(false);
     setAbortController(null);
+  };
+
+
+  const resetStateAndExit = (data) => {
+    // Add the final bot message to indicate the end of the session
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { type: "bot", text: data.response },
+    ]);
+
+    // Clear other states
+    setRequestLoading(false);
+    setIsAssignWorkflow(false);
+    setIsCheckProgress(false);
+    setIsCreatePO(false);
+    setIsCreateRFQ(false);
+    setIsRecommendQuotes(false);
+    setProductPrice(false);
+    setIsExit(true);
+    setIsLoading(false);
+
+    // Delay clearing the messages to ensure "Thank you" message displays
+    setTimeout(() => {
+      setMessages([]);
+      setIsExit(false);
+    }, 3000); // Adjust the delay as needed for smooth display
   };
 
   const handleStop = () => {
@@ -197,7 +256,7 @@ const ProductPriceChatBox: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen relative">
-       {!isRequestLoading && (messages.length === 0 && !isExit && <Files />)}
+       {!isRequestLoading && !isAssignWorkflow && !isCheckProgress && !isCreatePO && !isCreateRFQ && !isRecommendQuotes && !isProductPrice && (messages.length === 0 && !isExit && <Files />)}
       <div className="chat-messages ml-8 md:w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar ">
         {messages.map((msg, index) => (
           <div
@@ -205,12 +264,12 @@ const ProductPriceChatBox: React.FC = () => {
             className="flex flex-col justify-start w-full mt-[70px]"
           >
             {/* Bot message with data */}
-            {msg.type === "bot" && msg.data ? (
+            {msg?.type === "bot" && msg?.data ? (
               <div className="flex flex-col gap-[20px] justify-center items-baseline w-full">
                 <div className="flex items-center justify-start w-full gap-5">
                   <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>
                   {introMessage && (
-                    <p className="bg-transparent mr-10">{introMessage}</p>
+                    <p className="mr-10 bg-transparent">{introMessage}</p>
                   )}
                 </div>
                 <div className="flex flex-col items-center w-full">
@@ -219,9 +278,13 @@ const ProductPriceChatBox: React.FC = () => {
                       <Results key={i} result={result} />
                     ))}
                   </div>
+                  <div className="flex items-center justify-start w-full gap-5">
+                  {isProductPrice && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>}
+                  {nextPrompt && <p className="bg-gray-300 p-[10px] mr-10 rounded-lg">{nextPrompt}</p>}
+                  </div>
                 </div>
               </div>
-            ) : msg.type === "bot" && msg.text ? (
+            ) : msg?.type === "bot" && msg?.text ? (
               /* Bot message with text */
               <div className="flex gap-[20px] justify-start w-[300px] md:w-full">
                 <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex-shrink-0"></div>
@@ -249,7 +312,7 @@ const ProductPriceChatBox: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ) : msg.type === "user" ? (
+            ) : msg?.type === "user" ? (
               /* User message */
               <div className="flex gap-[20px] justify-start w-[300px] md:w-full">
                 <div className="w-[32px] h-[32px] rounded-full  flex-shrink-0">
@@ -291,8 +354,8 @@ const ProductPriceChatBox: React.FC = () => {
                   src="./images/Profile_image.jpeg"
                   alt=""
                 />
-                <div className="p-[5px] max-w-[300px] mr-10 px-[10px] md:p-[12px] text-start bg-gray-300 flex rounded-lg">
-                  {msg.text}
+                <div className="p-[5px] max-w-[300px] mr-10 px-[10px] md:p-[12px]md: min-w-[300px] text-start bg-gray-300 flex rounded-lg">
+                  {msg?.text}
                 </div>
               </div>
             )}

@@ -18,11 +18,23 @@ export type Message = {
 
 
 export type ContextTypes = {
-  handleCreatePurchaseRequest:() => Promise<void>,
+  handleCreatePurchaseRequest: (item: string) => void,
   messages:Message[],
   setMessages:React.Dispatch<React.SetStateAction<Message[]>>,
   isRequestLoading:boolean,
   inputValue:string,
-  setInputValue:React.Dispatch<React.SetStateAction<string>>
-  setRequestLoading:React.Dispatch<React.SetStateAction<boolean>>
+  setInputValue:React.Dispatch<React.SetStateAction<string>>,
+  setRequestLoading:React.Dispatch<React.SetStateAction<boolean>>,
+  isAssignWorkflow:boolean,
+  isCheckProgress:boolean,
+  isCreatePO:boolean,
+  isRecommendQuotes:boolean,
+  isCreateRFQ:boolean,
+  setIsAssignWorkflow:React.Dispatch<React.SetStateAction<boolean>>,
+  setIsCheckProgress:React.Dispatch<React.SetStateAction<boolean>>,
+  setIsCreatePO:React.Dispatch<React.SetStateAction<boolean>>,
+  setIsCreateRFQ:React.Dispatch<React.SetStateAction<boolean>>,
+  setIsRecommendQuotes:React.Dispatch<React.SetStateAction<boolean>>
+  isProductPrice:boolean
+  setProductPrice:React.Dispatch<React.SetStateAction<boolean>>
 }
