@@ -16,6 +16,7 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import * as pdfjsLib from "pdfjs-dist/build/pdf";
 import Files from "./Files";
 import { Context } from "../App";
+import { IoMdArrowRoundBack } from "react-icons/io";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/node_modules/pdfjs-dist/build/pdf.worker.mjs`;
 
@@ -30,6 +31,7 @@ const ProductPriceChatBox: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isExit, setIsExit] = useState(false);
   const [nextPrompt, setNextPrompt] = useState<string | null>(null)
+  const [isActiveBackButton, setActiveBackButton] = useState(false)
 
   const context = useContext(Context);
 
@@ -61,33 +63,34 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://ai-feature-backend.onrender.com/product_prices'
-    const create_request_endpoint = 'https://ai-feature-backend.onrender.com:5000/create_request'
+    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
+    const create_request_endpoint = 'https://backend-api-pjri.onrender.com/create_request'
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
     const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
 
+    const activeUrl = isRequestLoading
+          ? create_request_endpoint
+          : isAssignWorkflow
+          ? assign_workflow_endpoint
+          : isCheckProgress
+          ? check_progress_endpoint
+          : isCreateRFQ
+          ? create_rfq_endpoint
+          : isRecommendQuotes
+          ? recommend_quotes_endpoint
+          : isCreatePO
+          ? create_purchase_order_endpoint
+          : isProductPrice
+          ? get_product_price_endpoint
+          : product_prices_endpoint
 
     try {
       console.log(isProductPrice)
-      const response = await fetch( isRequestLoading
-        ? create_request_endpoint
-        : isAssignWorkflow
-        ? assign_workflow_endpoint
-        : isCheckProgress
-        ? check_progress_endpoint
-        : isCreateRFQ
-        ? create_rfq_endpoint
-        : isRecommendQuotes
-        ? recommend_quotes_endpoint
-        : isCreatePO
-        ? create_purchase_order_endpoint
-        : isProductPrice
-        ? get_product_price_endpoint
-        : product_prices_endpoint, {
+      const response = await fetch( activeUrl , {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -105,6 +108,10 @@ const ProductPriceChatBox: React.FC = () => {
         ),
         signal: controller.signal,
       } as RequestInit);
+
+      if(activeUrl === product_prices_endpoint){
+        setActiveBackButton(true)
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -234,7 +241,20 @@ const ProductPriceChatBox: React.FC = () => {
   const handleAttachClick = () => {
     fileInputRef.current?.click();
   };
+  const handleBackClick = () => {
+    setRequestLoading(false);
+    setIsAssignWorkflow(false);
+    setIsCheckProgress(false);
+    setIsCreatePO(false);
+    setIsCreateRFQ(false);
+    setIsRecommendQuotes(false);
+    setProductPrice(false);
+    setIsExit(false);
+    setIsLoading(false);
+    setMessages([])
+    setActiveBackButton(false)
 
+  };
   const handleRemoveFile = () => {
     setAttachedFile(null); // Clear the attached file
     if (fileInputRef.current) {
@@ -258,7 +278,7 @@ const ProductPriceChatBox: React.FC = () => {
   return (
     <div className="flex flex-col items-center min-h-screen relative">
        {!isRequestLoading && !isAssignWorkflow && !isCheckProgress && !isCreatePO && !isCreateRFQ && !isRecommendQuotes && !isProductPrice && (messages.length === 0 && !isExit && <Files />)}
-      <div className="chat-messages ml-8 md:w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar ">
+      <div className="chat-messages ml-8 md:w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -383,6 +403,7 @@ const ProductPriceChatBox: React.FC = () => {
           onSubmit={handleSubmit}
           className="md:w-[680px] rounded-[40px] md:min-h-[68px] flex flex-col relative bottom-3 box-border bg-gray-300"
         >
+
           {/* Display attached file */}
           {attachedFile && (
             <div className="flex items-center justify-between w-[250px] md:w-[250px] ml-6 mb-2 p-2 border border-gray-300 bg-white rounded-md shadow-sm relative mt-2  ">
@@ -459,6 +480,21 @@ const ProductPriceChatBox: React.FC = () => {
           >
             <MdOutlineAttachFile className="text-gray-500 h-[25px] w-[25px] rotate-45 cursor-pointer" />
           </button>
+
+          {isActiveBackButton && <button
+            type="button"
+            className="absolute rounded-full h-[32px] w-[32px] bottom-20 left-2 md:bottom-5 md:left-2 flex justify-center items-center md:text-lg"
+            onClick={handleBackClick}
+          >
+            <div className="flex gap-1 text-blue-400 font-medium items-center justify-center">
+            <IoMdArrowRoundBack className="h-[25px] w-[25px]  cursor-pointer"/>
+            <p >Back</p>
+
+            </div>
+
+          </button>}
+
+
         </form>
       </div>
     </div>

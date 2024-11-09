@@ -55,13 +55,13 @@ function App() {
 
   // Trigger the network request when any of the states change
   useEffect(() => {
-    const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request';
+    const create_request_endpoint = 'https://backend-api-pjri.onrender.com/create_request';
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow';
     const check_progress_endpoint = 'http://localhost:5000/check_progress';
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq';
     const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes';
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order';
-    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
 
     const fetchData = async () => {
       try {
