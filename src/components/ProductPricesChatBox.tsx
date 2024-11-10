@@ -483,7 +483,7 @@ const ProductPriceChatBox: React.FC = () => {
 
           {isActiveBackButton && <button
             type="button"
-            className="absolute rounded-full h-[32px] w-[32px] bottom-20 left-2 md:bottom-5 md:left-2 flex justify-center items-center md:text-lg"
+            className="absolute rounded-full h-[32px] w-[32px] bottom-20 left-4 md:bottom-20 md:left-4 flex justify-center items-center md:text-lg"
             onClick={handleBackClick}
           >
             <div className="flex gap-1 text-blue-400 font-medium items-center justify-center">
