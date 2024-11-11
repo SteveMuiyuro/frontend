@@ -63,14 +63,14 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
-    const create_request_endpoint = 'https://backend-api-pjri.onrender.com/create_request'
+    const product_prices_endpoint = 'https://ai-feature-backend.onrender.com/product_prices'
+    const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request'
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
     const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
 
     const activeUrl = isRequestLoading
           ? create_request_endpoint
@@ -186,7 +186,7 @@ const ProductPriceChatBox: React.FC = () => {
     setTimeout(() => {
       setMessages([]);
       setIsExit(false);
-    }, 3000); // Adjust the delay as needed for smooth display
+    }, 5000); // Adjust the delay as needed for smooth display
   };
 
   const handleStop = () => {
@@ -488,7 +488,7 @@ const ProductPriceChatBox: React.FC = () => {
           >
             <div className="flex gap-1 text-blue-400 font-medium items-center justify-center">
             <IoMdArrowRoundBack className="h-[25px] w-[25px]  cursor-pointer"/>
-            <p >Back</p>
+            <p>Back</p>
 
             </div>
 
