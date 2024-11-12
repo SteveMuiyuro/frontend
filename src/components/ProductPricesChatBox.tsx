@@ -21,7 +21,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/node_modules/pdfjs-dist/build/pdf.worker.mjs`;
 
 const ProductPriceChatBox: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+
   const [isFileLoading, setIsFileLoading] = useState(false); // New state for file loading
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
@@ -38,7 +38,7 @@ const ProductPriceChatBox: React.FC = () => {
   if (!context) {
     throw new Error("Items must be used within a context provider");
   }
-  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice} = context;
+  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading} = context;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -51,8 +51,6 @@ const ProductPriceChatBox: React.FC = () => {
       text: inputValue,
       files: attachedFile ? [attachedFile] : [], // Attach the current file
     };
-
-    console.log(userMessage);
 
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
@@ -89,7 +87,7 @@ const ProductPriceChatBox: React.FC = () => {
           : product_prices_endpoint
 
     try {
-      console.log(isProductPrice)
+
       const response = await fetch( activeUrl , {
         method: "POST",
         headers: {
@@ -113,6 +111,8 @@ const ProductPriceChatBox: React.FC = () => {
         setActiveBackButton(true)
       }
 
+
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -130,6 +130,7 @@ const ProductPriceChatBox: React.FC = () => {
         const botMessage: Message = data.response.suppliers
         ? { type: "bot", data: data.response.suppliers }
         : { type: "bot", text: data.response}
+
 
       setMessages((prevMessages) => [...prevMessages, botMessage]);
 
@@ -186,7 +187,7 @@ const ProductPriceChatBox: React.FC = () => {
     setTimeout(() => {
       setMessages([]);
       setIsExit(false);
-    }, 5000); // Adjust the delay as needed for smooth display
+    }, 4000); // Adjust the delay as needed for smooth display
   };
 
   const handleStop = () => {
@@ -300,7 +301,7 @@ const ProductPriceChatBox: React.FC = () => {
                     ))}
                   </div>
                   <div className="flex items-center justify-start w-full gap-5">
-                  {isProductPrice && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>}
+                  {nextPrompt && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>}
                   {nextPrompt && <p className="bg-gray-300 p-[10px] mr-10 rounded-lg">{nextPrompt}</p>}
                   </div>
                 </div>
@@ -328,7 +329,7 @@ const ProductPriceChatBox: React.FC = () => {
                       ))}
                     </div>
                   )}
-                  <div className="p-[12px] max-w-[400px] md:max-w-[610px] md:flex md:text-justify text-start bg-gray-300 flex rounded-lg">
+                  <div className="p-[12px] max-w-[400px] md:max-w-[610px] md:flex md:text-justify text-start bg-blue-100 flex rounded-lg">
                     {msg.text}
                   </div>
                 </div>
@@ -375,7 +376,7 @@ const ProductPriceChatBox: React.FC = () => {
                   src="./images/Profile_image.jpeg"
                   alt=""
                 />
-                <div className="p-[5px] max-w-[300px] mr-10 px-[10px] md:p-[12px]md: min-w-[300px] text-start bg-gray-300 flex rounded-lg">
+                <div className="p-[5px] max-w-[300px] mr-10 px-[10px] md:p-[12px]md: min-w-[300px] text-start bg-green-200 flex rounded-lg">
                   {msg?.text}
                 </div>
               </div>

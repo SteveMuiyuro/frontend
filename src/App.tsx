@@ -17,6 +17,7 @@ function App() {
   const [isCreateRFQ, setIsCreateRFQ] = useState(false);
   const [isRecommendQuotes, setIsRecommendQuotes] = useState(false);
   const [inputValue, setInputValue] = useState<string>(""); // New input state
+  const [isLoading, setIsLoading] = useState(false);
 
   const userId = "234";
   const userName = "steve";
@@ -144,7 +145,9 @@ function App() {
           setIsCreateRFQ,
           setIsRecommendQuotes,
           isProductPrice,
-          setProductPrice
+          setProductPrice,
+          isLoading,
+          setIsLoading
         }}
       >
         <ProductPricesChatBox />

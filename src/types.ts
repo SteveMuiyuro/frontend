@@ -37,6 +37,8 @@ export type ContextTypes = {
   setIsRecommendQuotes:React.Dispatch<React.SetStateAction<boolean>>
   isProductPrice:boolean
   setProductPrice:React.Dispatch<React.SetStateAction<boolean>>
+  setIsLoading:React.Dispatch<React.SetStateAction<boolean>>
+  isLoading:boolean
 }
 
 
