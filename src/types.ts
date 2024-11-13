@@ -39,6 +39,7 @@ export type ContextTypes = {
   setProductPrice:React.Dispatch<React.SetStateAction<boolean>>
   setIsLoading:React.Dispatch<React.SetStateAction<boolean>>
   isLoading:boolean
+
 }
 
 

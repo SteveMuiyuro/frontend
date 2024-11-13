@@ -39,7 +39,7 @@ const ProductPriceChatBox: React.FC = () => {
   if (!context) {
     throw new Error("Items must be used within a context provider");
   }
-  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading} = context;
+  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading, } = context;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -62,14 +62,14 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
-    const create_request_endpoint = 'https://backend-api-pjri.onrender.com/create_request'
+    const product_prices_endpoint = 'https://ai-feature-backend.onrender.com/product_prices'
+    const create_request_endpoint = 'http://localhost:5000/create_request'
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
     const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
 
     const activeUrl = isRequestLoading
           ? create_request_endpoint
@@ -292,7 +292,7 @@ const ProductPriceChatBox: React.FC = () => {
                 <div className="flex items-center justify-start w-full gap-5">
                   <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>
                   {introMessage && (
-                    <p className="mr-10 bg-transparent">{introMessage}</p>
+                    <p className="p-[12px] max-w-[400px] md:max-w-[610px] flex bg-blue-100 rounded-lg">{introMessage}</p>
                   )}
                 </div>
                 <div className="flex flex-col items-center w-full">
@@ -385,7 +385,7 @@ const ProductPriceChatBox: React.FC = () => {
           </div>
         ))}
 
-        {isLoading && (
+        {isLoading  && (
           <div className="flex gap-[20px] justify-start w-full mt-[70px]">
             <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500"></div>
             <div className="flex flex-col gap-5 w-full">
