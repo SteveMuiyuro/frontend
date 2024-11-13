@@ -390,7 +390,7 @@ const ProductPriceChatBox: React.FC = () => {
           </div>
         ))}
 
-        {isLoading || initialLoader && (
+        {isLoading && (
           <div className="flex gap-[20px] justify-start w-full mt-[70px]">
             <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500"></div>
             <div className="flex flex-col gap-5 w-full">
