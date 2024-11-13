@@ -18,7 +18,7 @@ function App() {
   const [isRecommendQuotes, setIsRecommendQuotes] = useState(false);
   const [inputValue, setInputValue] = useState<string>(""); // New input state
   const [isLoading, setIsLoading] = useState(false);
-  const [initialLoader, setInitialLoader] = useState(false)
+
   const userId = "234";
   const userName = "steve";
 
@@ -49,7 +49,6 @@ function App() {
         break;
       case "Know the price of an item":
         setProductPrice(true);
-        setInitialLoader(true)
         break;
       default:
         console.log("No matching action for this item.");
@@ -148,9 +147,7 @@ function App() {
           isProductPrice,
           setProductPrice,
           isLoading,
-          setIsLoading,
-          initialLoader,
-          setInitialLoader
+          setIsLoading
         }}
       >
         <ProductPricesChatBox />

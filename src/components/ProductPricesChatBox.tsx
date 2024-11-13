@@ -39,7 +39,7 @@ const ProductPriceChatBox: React.FC = () => {
   if (!context) {
     throw new Error("Items must be used within a context provider");
   }
-  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading, initialLoader, setInitialLoader} = context;
+  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading} = context;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -124,11 +124,6 @@ const ProductPriceChatBox: React.FC = () => {
       if (data.exit === true) {
         resetStateAndExit(data);
         return;
-      }
-
-      if (data?.initial === false){
-        setInitialLoader(false)
-
       }
 
       if (isProductPrice) {
