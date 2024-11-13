@@ -302,7 +302,7 @@ const ProductPriceChatBox: React.FC = () => {
                   </div>
                   <div className="flex items-center justify-start w-full gap-5">
                   {nextPrompt && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>}
-                  {nextPrompt && <p className="bg-gray-300 p-[10px] mr-10 rounded-lg">{nextPrompt}</p>}
+                  {nextPrompt && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{nextPrompt}</p>}
                   </div>
                 </div>
               </div>
