@@ -33,12 +33,13 @@ const ProductPriceChatBox: React.FC = () => {
   const [nextPrompt, setNextPrompt] = useState<string | null>(null)
   const [isActiveBackButton, setActiveBackButton] = useState(false)
 
+
   const context = useContext(Context);
 
   if (!context) {
     throw new Error("Items must be used within a context provider");
   }
-  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading} = context;
+  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading, initialLoader, setInitialLoader} = context;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -123,6 +124,11 @@ const ProductPriceChatBox: React.FC = () => {
       if (data.exit === true) {
         resetStateAndExit(data);
         return;
+      }
+
+      if (data?.initial === false){
+        setInitialLoader(false)
+
       }
 
       if (isProductPrice) {
@@ -384,7 +390,7 @@ const ProductPriceChatBox: React.FC = () => {
           </div>
         ))}
 
-        {isLoading && (
+        {isLoading || initialLoader && (
           <div className="flex gap-[20px] justify-start w-full mt-[70px]">
             <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500"></div>
             <div className="flex flex-col gap-5 w-full">
