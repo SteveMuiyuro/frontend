@@ -18,10 +18,8 @@ function App() {
   const [isRecommendQuotes, setIsRecommendQuotes] = useState(false);
   const [inputValue, setInputValue] = useState<string>(""); // New input state
   const [isLoading, setIsLoading] = useState(false);
-
-  const userId = "234";
-  const userName = "steve";
-
+  const [userId] = useState("234")
+  const [userName] = useState("Steve")
 
 
   const handleRequest = (item: string) => {
@@ -121,7 +119,7 @@ function App() {
     if (isRequestLoading || isAssignWorkflow || isCheckProgress || isCreateRFQ || isRecommendQuotes || isCreatePO || isProductPrice) {
       fetchData();
     }
-  }, [isRequestLoading, isAssignWorkflow, isCheckProgress, isCreateRFQ, isRecommendQuotes, isCreatePO, isProductPrice]);
+  }, [isRequestLoading, isAssignWorkflow, isCheckProgress, isCreateRFQ, isRecommendQuotes, isCreatePO, isProductPrice, userId, userName]);
 
   return (
     <div>
@@ -148,6 +146,7 @@ function App() {
           setProductPrice,
           isLoading,
           setIsLoading,
+          userName,
 
         }}
       >

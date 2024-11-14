@@ -13,11 +13,11 @@ function Suggested({ title, icon }:Props) { // Define the prop type correctly
   if (!context) {
     throw new Error("File component must be used within a ContextProvider");
   }
-  const { handleCreatePurchaseRequest } = context;
+  const { handleRequest } = context;
   return (
     <div className="flex justify-start items-center gap-5">
       {icon}
-      <button onClick={() => handleCreatePurchaseRequest(title)}>{title}</button>
+      <button onClick={() => handleRequest(title)}>{title}</button>
     </div>
   );
 }

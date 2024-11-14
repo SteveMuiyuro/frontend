@@ -5,7 +5,7 @@ import { LuListChecks } from "react-icons/lu";
 import { LuPackageSearch } from "react-icons/lu";
 import Suggested from "../components/Suggested"
 
-function Files() {
+function Files({userName}:{userName:string}) {
 
     const files = [
         "Create a Purchase Request",
@@ -45,7 +45,7 @@ const suggestions = suggested.map((item, i) => (<Suggested key={i}  title={item.
 
 
         <div className="flex flex-col justify-center gap-2">
-        <p className="text-[#838F94] text-sm">Hi Paul Umukoro! How can I help you today</p>
+        <p className="text-[#838F94] text-sm">Hi {userName}! How can I help you today</p>
         <p className="text-[#838F94] text-sm">Suggested</p>
         {suggestions}
         <p className="text-sm text-[#838F94]">Files</p>

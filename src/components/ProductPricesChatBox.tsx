@@ -39,7 +39,7 @@ const ProductPriceChatBox: React.FC = () => {
   if (!context) {
     throw new Error("Items must be used within a context provider");
   }
-  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading, } = context;
+  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading,userName } = context;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -279,7 +279,7 @@ const ProductPriceChatBox: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen relative">
-       {!isRequestLoading && !isAssignWorkflow && !isCheckProgress && !isCreatePO && !isCreateRFQ && !isRecommendQuotes && !isProductPrice && (messages.length === 0 && !isExit && <Files />)}
+       {!isRequestLoading && !isAssignWorkflow && !isCheckProgress && !isCreatePO && !isCreateRFQ && !isRecommendQuotes && !isProductPrice && (messages.length === 0 && !isExit && <Files userName={userName} />)}
       <div className="chat-messages ml-8 md:w-[680px] max-h-[80vh] overflow-y-auto mb-20 no-scrollbar">
         {messages.map((msg, index) => (
           <div
@@ -290,7 +290,7 @@ const ProductPriceChatBox: React.FC = () => {
             {msg?.type === "bot" && msg?.data ? (
               <div className="flex flex-col gap-[20px] justify-center items-baseline w-full">
                 <div className="flex items-start justify-start w-full gap-5">
-                  <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>
+                  <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>
                   {introMessage && (
                     <p className="p-[12px] max-w-[400px] md:max-w-[610px] flex bg-blue-100 rounded-lg">{introMessage}</p>
                   )}
@@ -302,7 +302,7 @@ const ProductPriceChatBox: React.FC = () => {
                     ))}
                   </div>
                   <div className="flex items-start justify-start w-full gap-5">
-                  {nextPrompt && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>}
+                  {nextPrompt && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
                   {nextPrompt && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{nextPrompt}</p>}
                   </div>
                 </div>
@@ -377,7 +377,7 @@ const ProductPriceChatBox: React.FC = () => {
                   src="./images/Profile_image.jpeg"
                   alt=""
                 />
-                <div className="p-[5px] max-w-[300px] mr-10 px-[10px] md:p-[12px]md: min-w-[300px] text-start bg-green-200 flex rounded-lg">
+                <div className="p-[5px] max-w-[300px] mr-10 px-[10px] md:p-[12px]md: min-w-[300px] text-start bg-gray-300 flex rounded-lg">
                   {msg?.text}
                 </div>
               </div>
@@ -387,7 +387,7 @@ const ProductPriceChatBox: React.FC = () => {
 
         {isLoading  && (
           <div className="flex gap-[20px] justify-start w-full mt-[70px]">
-            <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500"></div>
+            <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex-shrink-0"></div>
             <div className="flex flex-col gap-5 w-full">
               <div className="flex justify-start items-center text-gray-600 gap-2">
                 <AiOutlineLoading3Quarters className="animate-spin" size={24} />
