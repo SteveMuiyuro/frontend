@@ -18,7 +18,7 @@ export type Message = {
 
 
 export type ContextTypes = {
-  handleCreatePurchaseRequest: (item: string) => void,
+  handleRequest: (item: string) => void,
   messages:Message[],
   setMessages:React.Dispatch<React.SetStateAction<Message[]>>,
   isRequestLoading:boolean,

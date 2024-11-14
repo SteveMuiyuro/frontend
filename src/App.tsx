@@ -24,9 +24,7 @@ function App() {
 
 
 
-  const handleCreatePurchaseRequest = (item: string) => {
-     console.log(item)
-
+  const handleRequest = (item: string) => {
     // Set the relevant state based on the item
     switch (item) {
       case "Create a Purchase Request":
@@ -63,7 +61,7 @@ function App() {
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq';
     const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes';
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order';
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
 
     const fetchData = async () => {
       try {
@@ -129,7 +127,7 @@ function App() {
     <div>
       <Context.Provider
         value={{
-          handleCreatePurchaseRequest,
+          handleRequest,
           messages,
           setMessages,
           isRequestLoading,

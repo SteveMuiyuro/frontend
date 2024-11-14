@@ -9,12 +9,12 @@ function File({ item}: { item: string}) { // Define the prop type correctly
   if (!context) {
     throw new Error("File component must be used within a ContextProvider");
   }
-  const { handleCreatePurchaseRequest } = context;
+  const { handleRequest } = context;
 
   return (
     <div className="flex justify-start items-center gap-5">
       <BsFileEarmarkCheck size={24} className="text-green-700"/>
-     {<button onClick={() => handleCreatePurchaseRequest(item)}>{item}</button>}
+     {<button onClick={() => handleRequest(item)}>{item}</button>}
     </div>
   );
 }
