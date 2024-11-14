@@ -289,7 +289,7 @@ const ProductPriceChatBox: React.FC = () => {
             {/* Bot message with data */}
             {msg?.type === "bot" && msg?.data ? (
               <div className="flex flex-col gap-[20px] justify-center items-baseline w-full">
-                <div className="flex items-center justify-start w-full gap-5">
+                <div className="flex items-start justify-start w-full gap-5">
                   <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>
                   {introMessage && (
                     <p className="p-[12px] max-w-[400px] md:max-w-[610px] flex bg-blue-100 rounded-lg">{introMessage}</p>
@@ -301,7 +301,7 @@ const ProductPriceChatBox: React.FC = () => {
                       <Results key={i} result={result} />
                     ))}
                   </div>
-                  <div className="flex items-center justify-start w-full gap-5">
+                  <div className="flex items-start justify-start w-full gap-5">
                   {nextPrompt && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0"></div>}
                   {nextPrompt && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{nextPrompt}</p>}
                   </div>
