@@ -12,7 +12,7 @@ function Files({userName}:{userName:string}) {
         "Assign Request to Approval Workflow",
         "Check Request Progress",
         "Create RFQ/RFP for Purchase Request",
-        "Recomendations for Best Quotes",
+        "Recommendations for Best Quotes",
         "Create Purchase Order"
       ];
 

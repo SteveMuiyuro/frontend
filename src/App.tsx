@@ -23,7 +23,9 @@ function App() {
 
 
   const handleRequest = (item: string) => {
-    // Set the relevant state based on the item
+
+    setIsLoading(true)
+
     switch (item) {
       case "Create a Purchase Request":
         setRequestLoading(true);
@@ -59,7 +61,7 @@ function App() {
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq';
     const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes';
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order';
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'http://localhost:5000/get_product_prices'
 
     const fetchData = async () => {
       try {
@@ -100,9 +102,14 @@ function App() {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        if(response.ok){
+          setIsLoading(false)
+        }
+
 
 
         const data = await response.json();
+        console.log(data)
         const botMessage: Message = { type: "bot", text: data.response };
         setMessages((prevMessages) => [...prevMessages, botMessage]);
       } catch (error) {
@@ -147,7 +154,6 @@ function App() {
           isLoading,
           setIsLoading,
           userName,
-
         }}
       >
         <ProductPricesChatBox />

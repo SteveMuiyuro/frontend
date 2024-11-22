@@ -14,8 +14,27 @@ export type Message = {
   text?: string; // For user text and error messages
   data?: Supplier[]; // For bot responses with supplier data
   files?: File[];  // New field for attachments
+  rfqs?:RFQ[] | BestQuotes[];  // bestQuotes?:BestQuotes[]
 };
 
+type RFQ = {
+  ID:number,
+  Title:string,
+  Status:string
+
+}
+
+type Quote = {
+  item:string,
+  quantity:number,
+  unit:string,
+  price:number
+}
+
+type BestQuotes ={
+  criteria_matched:string,
+  quote:Quote
+}
 
 export type ContextTypes = {
   handleRequest: (item: string) => void,

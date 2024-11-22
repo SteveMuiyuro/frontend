@@ -32,6 +32,9 @@ const ProductPriceChatBox: React.FC = () => {
   const [isExit, setIsExit] = useState(false);
   const [nextPrompt, setNextPrompt] = useState<string | null>(null)
   const [isActiveBackButton, setActiveBackButton] = useState(false)
+  const [rfqsResult, setRfqsResult] = useState<string | null>(null)
+  const [bestQuoteResult, setBestQuoteResult] = useState<string | null>(null)
+
 
 
   const context = useContext(Context);
@@ -62,14 +65,14 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
+    const product_prices_endpoint = 'http://localhost:5000/product_prices'
     const create_request_endpoint = 'http://localhost:5000/create_request'
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
     const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'http://localhost:5000/get_product_prices'
 
     const activeUrl = isRequestLoading
           ? create_request_endpoint
@@ -118,7 +121,11 @@ const ProductPriceChatBox: React.FC = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
+
       console.log(data)
+
+
+
 
           // Handle end of session
       if (data.exit === true) {
@@ -135,7 +142,23 @@ const ProductPriceChatBox: React.FC = () => {
 
       setMessages((prevMessages) => [...prevMessages, botMessage]);
 
-      } else {
+      }
+
+
+      else if (isRecommendQuotes) {
+          setIntroMessage(data.response.message);
+
+          const botMessage: Message = data.available_rfqs
+            ? { type: 'bot', rfqs: data.available_rfqs }
+            : data.best_quotes
+            ? { type: 'bot', rfqs: data.best_quotes }
+            : { type: 'bot', text: data.response };
+
+          setMessages((prevMessages) => [...prevMessages, botMessage]);
+        }
+
+
+      else {
         setIntroMessage(data.message);
         const botMessage: Message = data.suppliers
         ? { type: "bot", data: data.suppliers }
@@ -144,6 +167,18 @@ const ProductPriceChatBox: React.FC = () => {
       setMessages((prevMessages) => [...prevMessages, botMessage]);
 
       }
+
+      if(data.available_rfqs){
+        console.log(data.available_rfqs)
+
+        setRfqsResult(data.response)
+      }
+
+      if(data.best_quotes){
+        console.log(data.best_quotes)
+        setBestQuoteResult(data.response)
+      }
+
 
       if(data.next_prompt){
         setNextPrompt(data.next_prompt)
@@ -301,13 +336,89 @@ const ProductPriceChatBox: React.FC = () => {
                       <Results key={i} result={result} />
                     ))}
                   </div>
+
                   <div className="flex items-start justify-start w-full gap-5">
                   {nextPrompt && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
                   {nextPrompt && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{nextPrompt}</p>}
                   </div>
                 </div>
               </div>
-            ) : msg?.type === "bot" && msg?.text ? (
+            ): msg?.type === "bot" && msg?.rfqs ? (
+              <div className="flex items-start justify-start min-w-auto gap-5">
+                <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>
+                {introMessage && (
+                  <p className="p-[12px] max-w-[400px] md:max-w-[610px] flex bg-blue-100 rounded-lg">{introMessage}</p>
+                )}
+                <div className="flex flex-col gap-3 ">
+
+                {msg?.rfqs && Array.isArray(msg.rfqs) && (
+                    <>
+                      {/* Conditionally render based on the type of rfqs */}
+                      {typeof msg.rfqs[0] === 'object' && 'ID' in msg.rfqs[0] && rfqsResult && (
+                        <div className="p-[12px] max-w-[400px] md:max-w-[610px] md:flex md:text-justify text-start bg-blue-100 rounded-lg">
+                          {rfqsResult}
+                        </div>
+                      )}
+                            {msg?.rfqs && msg.rfqs.some(result => typeof result === 'object' && 'ID' in result && 'Title' in result) && (
+                              <div className="grid grid-cols-3 gap-4 w-full text-sm bg-blue-100 p-4 rounded-lg">
+
+                                <div className="font-bold text-start">ID</div>
+                                <div className="font-bold text-start">Title</div>
+                                <div className="font-bold text-start">Status</div>
+
+                                {msg.rfqs.map((result, i) => {
+                                  if (typeof result === 'object' && 'ID' in result && 'Title' in result) {
+                                    return (
+                                      <React.Fragment key={`rfq-${i}`}>
+                                        <div className="text-start font-medium">{result.ID}</div>
+                                        <div className="text-start">{result.Title}</div>
+                                        <div className="text-start">{result.Status}</div>
+
+                                      </React.Fragment>
+                                    );
+                                  }
+                                  return null;
+                                })}
+                              </div>
+                            )}
+
+                      {typeof msg.rfqs[0] === 'object' && 'quote' in msg.rfqs[0] && bestQuoteResult && (
+                        <div className="p-[12px] max-w-[400px] md:max-w-[610px] md:flex md:text-justify text-start bg-blue-100 rounded-lg">
+                          {bestQuoteResult}
+                        </div>
+                      )}
+
+                      {msg.rfqs.map((result, i) => {
+                        if (typeof result === 'object' && 'quote' in result) {
+                          const { item, quantity, unit, price } = result.quote;
+                          return (
+                            <div
+                              key={`quote-${i}`}
+                              className="grid grid-cols-5 gap-4 max-w-[400px] md:max-w-[610px] text-sm bg-blue-100 p-4 rounded-lg"
+                            >
+                              <div className="font-bold text-center">#</div>
+                              <div className="font-bold text-center">Item</div>
+                              <div className="font-bold text-center">Quantity</div>
+                              <div className="font-bold text-center">Units</div>
+                              <div className="font-bold text-center">Price Per Unit</div>
+
+                              <div className="text-center font-medium">{i + 1}</div>
+                              <div className="text-center">{item}</div>
+                              <div className="text-center">{quantity}</div>
+                              <div className="text-center">{unit}</div>
+                              <div className="text-center">${price}</div>
+                            </div>
+                          );
+                        }
+                        // Fallback for unexpected cases
+                        return null;
+                      })}
+                    </>
+                  )}
+                </div>
+            </div>
+            ):
+            msg?.type === "bot" && msg?.text ? (
               /* Bot message with text */
               <div className="flex gap-[20px] justify-start w-[300px] md:w-full">
                 <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex-shrink-0"></div>
@@ -429,6 +540,7 @@ const ProductPriceChatBox: React.FC = () => {
           <textarea
             value={inputValue}
             onChange={handleInputChange}
+            disabled={isLoading}
             placeholder="Ask anything..."
             className="md:placeholder:outline-none rounded-[40px] placeholder:text-sm w-[300px] md:w-full md:min-h-[68px] resize-none bg-gray-300 px-10 md:px-14 md:pr-14 relative py-6 outline-none"
             ref={textAreaRef}
