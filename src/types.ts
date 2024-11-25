@@ -20,15 +20,13 @@ export type Message = {
 type RFQ = {
   ID:number,
   Title:string,
-  Status:string
-
 }
 
 type Quote = {
   item:string,
   quantity:number,
-  unit:string,
   price:number
+
 }
 
 type BestQuotes ={
@@ -58,7 +56,8 @@ export type ContextTypes = {
   setProductPrice:React.Dispatch<React.SetStateAction<boolean>>
   setIsLoading:React.Dispatch<React.SetStateAction<boolean>>
   isLoading:boolean
-  userName:string
+  userName:string,
+  userId:string
 }
 
 

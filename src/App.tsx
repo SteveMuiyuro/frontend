@@ -59,9 +59,9 @@ function App() {
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow';
     const check_progress_endpoint = 'http://localhost:5000/check_progress';
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq';
-    const recommend_quotes_endpoint = 'https://backend-api-pjri.onrender.com/recommend_quotes';
+    const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes';
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order';
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'http://localhost:5000/get_product_prices'
 
     const fetchData = async () => {
       try {
@@ -85,6 +85,12 @@ function App() {
           console.log("No endpoint matched.");
           return;
         }
+
+        console.log("Sending payload:", {
+          message: "start",
+          userId,
+          userName,
+        });
 
         const response = await fetch(endpoint, {
           method: "POST",
@@ -154,6 +160,7 @@ function App() {
           isLoading,
           setIsLoading,
           userName,
+          userId
         }}
       >
         <ProductPricesChatBox />

@@ -42,7 +42,7 @@ const ProductPriceChatBox: React.FC = () => {
   if (!context) {
     throw new Error("Items must be used within a context provider");
   }
-  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading,userName } = context;
+  const { messages, setMessages, inputValue, setInputValue, isRequestLoading, setRequestLoading, isAssignWorkflow, setIsAssignWorkflow, isCheckProgress, setIsCheckProgress, isCreatePO, setIsCreatePO, isCreateRFQ, setIsCreateRFQ, setIsRecommendQuotes,  isRecommendQuotes, isProductPrice, setProductPrice, isLoading, setIsLoading,userName, userId } = context;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -65,14 +65,14 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
+    const product_prices_endpoint = 'http://localhost:5000/product_prices'
     const create_request_endpoint = 'http://localhost:5000/create_request'
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
-    const recommend_quotes_endpoint = 'https://backend-api-pjri.onrender.com/recommend_quotes'
+    const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'http://localhost:5000/get_product_prices'
 
     const activeUrl = isRequestLoading
           ? create_request_endpoint
@@ -105,7 +105,7 @@ const ProductPriceChatBox: React.FC = () => {
           isCreateRFQ ||
           isRecommendQuotes||
           isProductPrice
-            ? { message: inputValue }
+            ? { message: inputValue, userId: userId, userName:userName }
             : { prompt: `${inputValue} ${fileContent || ""}`, limit: 8 }
         ),
         signal: controller.signal,
@@ -360,11 +360,11 @@ const ProductPriceChatBox: React.FC = () => {
                         </div>
                       )}
                             {msg?.rfqs && msg.rfqs.some(result => typeof result === 'object' && 'ID' in result && 'Title' in result) && (
-                              <div className="grid grid-cols-3 gap-4 w-full text-sm bg-blue-100 p-4 rounded-lg">
+                              <div className="grid grid-cols-2 gap-4 w-full text-sm bg-blue-100 p-4 rounded-lg">
 
                                 <div className="font-bold text-start">ID</div>
                                 <div className="font-bold text-start">Title</div>
-                                <div className="font-bold text-start">Status</div>
+
 
                                 {msg.rfqs.map((result, i) => {
                                   if (typeof result === 'object' && 'ID' in result && 'Title' in result) {
@@ -372,7 +372,6 @@ const ProductPriceChatBox: React.FC = () => {
                                       <React.Fragment key={`rfq-${i}`}>
                                         <div className="text-start font-medium">{result.ID}</div>
                                         <div className="text-start">{result.Title}</div>
-                                        <div className="text-start">{result.Status}</div>
 
                                       </React.Fragment>
                                     );
@@ -390,7 +389,9 @@ const ProductPriceChatBox: React.FC = () => {
 
                       {msg.rfqs.map((result, i) => {
                         if (typeof result === 'object' && 'quote' in result) {
-                          const { item, quantity, unit, price } = result.quote;
+                          const { item, quantity,  price } = result.quote;
+
+
                           return (
                             <div
                               key={`quote-${i}`}
@@ -399,14 +400,13 @@ const ProductPriceChatBox: React.FC = () => {
                               <div className="font-bold text-center">#</div>
                               <div className="font-bold text-center">Item</div>
                               <div className="font-bold text-center">Quantity</div>
-                              <div className="font-bold text-center">Units</div>
                               <div className="font-bold text-center">Price Per Unit</div>
-
+                              <div className="font-bold text-center">Total</div>
                               <div className="text-center font-medium">{i + 1}</div>
                               <div className="text-center">{item}</div>
                               <div className="text-center">{quantity}</div>
-                              <div className="text-center">{unit}</div>
-                              <div className="text-center">${price}</div>
+                              <div className="text-center">{price}</div>
+                              <div className="text-center">{new Intl.NumberFormat('en-US').format(quantity * price)}</div>
                             </div>
                           );
                         }
