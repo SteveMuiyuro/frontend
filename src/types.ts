@@ -25,13 +25,20 @@ type RFQ = {
 type Quote = {
   item:string,
   quantity:number,
-  price:number
+  price:number,
+  vendor:Vendor,
+  delivery_date:string
 
 }
 
 type BestQuotes ={
   criteria_matched:string,
   quote:Quote
+}
+
+type Vendor = {
+  firstName:string,
+  lastName:string
 }
 
 export type ContextTypes = {

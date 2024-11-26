@@ -65,14 +65,14 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
+    const product_prices_endpoint = 'http://localhost:5000/product_prices'
     const create_request_endpoint = 'http://localhost:5000/create_request'
     const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
-    const recommend_quotes_endpoint = 'https://backend-api-pjri.onrender.com/recommend_quotes'
+    const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'http://localhost:5000/get_product_prices'
 
     const activeUrl = isRequestLoading
           ? create_request_endpoint
@@ -170,7 +170,6 @@ const ProductPriceChatBox: React.FC = () => {
 
       if(data.available_rfqs){
         console.log(data.available_rfqs)
-
         setRfqsResult(data.response)
       }
 
@@ -389,7 +388,7 @@ const ProductPriceChatBox: React.FC = () => {
 
                       {msg.rfqs.map((result, i) => {
                         if (typeof result === 'object' && 'quote' in result) {
-                          const { item, quantity,  price } = result.quote;
+                          const { item, quantity,  price, vendor} = result.quote;
 
 
                           return (
@@ -397,12 +396,14 @@ const ProductPriceChatBox: React.FC = () => {
                               key={`quote-${i}`}
                               className="grid grid-cols-5 gap-4 max-w-[400px] md:max-w-[610px] text-sm bg-blue-100 p-4 rounded-lg"
                             >
-                              <div className="font-bold text-center">#</div>
+                              {/* <div className="font-bold text-center">#</div> */}
+                              <div className="font-bold text-center">Vendor</div>
                               <div className="font-bold text-center">Item</div>
                               <div className="font-bold text-center">Quantity</div>
                               <div className="font-bold text-center">Price Per Unit</div>
                               <div className="font-bold text-center">Total</div>
-                              <div className="text-center font-medium">{i + 1}</div>
+                              {/* <div className="text-center font-medium">{i + 1}</div> */}
+                              <div className="text-center">{vendor.firstName} {vendor.lastName}</div>
                               <div className="text-center">{item}</div>
                               <div className="text-center">{quantity}</div>
                               <div className="text-center">{price}</div>
