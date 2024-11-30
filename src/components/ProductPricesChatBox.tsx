@@ -9,7 +9,7 @@ import React, {
 import { FaArrowUp } from "react-icons/fa6";
 import { MdOutlineAttachFile } from "react-icons/md";
 import { FaStop } from "react-icons/fa6";
-import { Message, Data } from "../types";
+import { Message, Data, RecentPrs } from "../types";
 import Results from "./Results";
 import { FaDownload, FaTimes } from "react-icons/fa";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
@@ -33,7 +33,9 @@ const ProductPriceChatBox: React.FC = () => {
   const [nextPrompt, setNextPrompt] = useState<string | null>(null)
   const [isActiveBackButton, setActiveBackButton] = useState(false)
   const [rfqsResult, setRfqsResult] = useState<string | null>(null)
+  const [recentPrsResult, setRecentPrsResult] = useState<string | null>()
   const [bestQuoteResult, setBestQuoteResult] = useState<string | null>(null)
+  const [availableWorkflowsResult, setAvailableWorkflowsResult] = useState<string | null>(null)
 
 
 
@@ -65,14 +67,14 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://backend-api-pjri.onrender.com/product_prices'
-    const create_request_endpoint = 'http://localhost:5000/create_request'
-    const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
+    const product_prices_endpoint = 'https://ai-feature-backend.onrender.com/product_prices'
+    const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request'
+    const assign_workflow_endpoint = 'https://ai-feature-backend.onrender.com/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
-    const recommend_quotes_endpoint = 'https://backend-api-pjri.onrender.com/recommend_quotes'
+    const recommend_quotes_endpoint = 'https://ai-feature-backend.onrender.com/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://backend-api-pjri.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
 
     const activeUrl = isRequestLoading
           ? create_request_endpoint
@@ -123,6 +125,7 @@ const ProductPriceChatBox: React.FC = () => {
       const data = await response.json();
 
       console.log(data)
+      console.log(availableWorkflowsResult)
 
 
 
@@ -144,7 +147,6 @@ const ProductPriceChatBox: React.FC = () => {
 
       }
 
-
       else if (isRecommendQuotes) {
           setIntroMessage(data.response.message);
 
@@ -153,6 +155,18 @@ const ProductPriceChatBox: React.FC = () => {
             : data.best_quotes
             ? { type: 'bot', rfqs: data.best_quotes }
             : { type: 'bot', text: data.response };
+
+          setMessages((prevMessages) => [...prevMessages, botMessage]);
+        }
+
+      else if (isAssignWorkflow) {
+          setIntroMessage(data.response.message);
+
+          const botMessage: Message = data.recent_prs
+            ? { type: "bot", recentPrs: data.recent_prs }
+            : data.available_workflows
+            ? { type: "bot", recentPrs: data.available_workflows}
+            : { type: "bot", text: data.response}
 
           setMessages((prevMessages) => [...prevMessages, botMessage]);
         }
@@ -169,13 +183,20 @@ const ProductPriceChatBox: React.FC = () => {
       }
 
       if(data.available_rfqs){
-        console.log(data.available_rfqs)
         setRfqsResult(data.response)
       }
 
       if(data.best_quotes){
-        console.log(data.best_quotes)
         setBestQuoteResult(data.response)
+      }
+
+      if(data.available_workflows){
+        console.log(data.response)
+        setAvailableWorkflowsResult(data.response)
+      }
+
+      if(data.recent_prs){
+        setRecentPrsResult(data.response)
       }
 
 
@@ -342,7 +363,79 @@ const ProductPriceChatBox: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ): msg?.type === "bot" && msg?.rfqs ? (
+            ) :
+            msg?.type === "bot" && msg?.recentPrs ? (
+              <div className="flex flex-col items-start justify-start min-w-auto gap-5">
+                {/* Intro message */}
+                {introMessage && (
+                  <p className="p-[12px] max-w-[400px] md:max-w-[610px] flex bg-blue-100 rounded-lg">
+                    {introMessage}
+                  </p>
+                )}
+
+                <div className="flex items-start justify-start w-full gap-5">
+
+                  <div className="flex flex-col gap-3 w-full">
+                  <div className="flex items-start justify-start w-full gap-5">
+
+
+                  <div className="flex flex-col gap-4">
+
+                      {/* Case 1: recentPrs is an array of RecentPrs objects */}
+                    {Array.isArray(msg.recentPrs) && typeof msg.recentPrs[0] === "object" && recentPrsResult && (
+                      <>
+                       <div className="flex items-start justify-start w-full gap-5">
+                        {recentPrsResult && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+                        <div className="flex flex-col gap-4">
+                        {recentPrsResult && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{recentPrsResult}</p>}
+                        <div className="grid grid-cols-2 gap-4 text-sm bg-blue-100 p-4 rounded-lg md:max-w-[610px]">
+                          {/* Headers */}
+                          <div className="font-bold text-start">Request ID</div>
+                          <div className="font-bold text-start">Title</div>
+                          {/* Map over RecentPrs */}
+                          {msg.recentPrs?.map((pr , i) => (
+                            <React.Fragment key={`recent-pr-${i}`}>
+                              <div className="text-start font-medium">{(pr as RecentPrs).requestId}</div>
+                              <div className="text-start">{(pr as RecentPrs).title}</div>
+                            </React.Fragment>
+                          ))}
+                        </div>
+                        </div>
+                      </div>
+                      </>
+                    )}
+
+                    {/* Case 2: recentPrs is a Workflows array */}
+
+                    {Array.isArray(msg.recentPrs) && typeof msg.recentPrs[0] === "string" && availableWorkflowsResult &&(
+                      <>
+                       <div className="flex items-start justify-start w-full gap-5">
+                          {availableWorkflowsResult && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+                          <div className="flex flex-col gap-4">
+                          {availableWorkflowsResult && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{availableWorkflowsResult}</p>}
+                          <div className="flex flex-col gap-3 bg-blue-100 p-4 min-w-auto rounded-lg md:max-w-auto">
+                          {/* <div className="font-bold text-start mb-2">Workflows</div> */}
+                          {/* Map over Workflows */}
+                          {msg.recentPrs?.map((workflow, i) => (
+                            <div
+                              key={`workflow-${i}`}
+                              className="text-start bg-blue-200 p-3 rounded-lg"
+                            >
+                              {typeof workflow === "string" && workflow}
+                            </div>
+                          ))}
+                        </div>
+                          </div>
+                      </div>
+                      </>
+                    )}
+                  </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            ) :
+            msg?.type === "bot" && msg?.rfqs ? (
               <div className="flex items-start justify-start min-w-auto gap-5">
                 <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>
                 {introMessage && (
@@ -389,8 +482,6 @@ const ProductPriceChatBox: React.FC = () => {
                       {msg.rfqs.map((result, i) => {
                         if (typeof result === 'object' && 'quote' in result) {
                           const { item, quantity,  price, vendor} = result.quote;
-
-
                           return (
                                     <div
                                       key={`quote-${i}`}
@@ -432,6 +523,7 @@ const ProductPriceChatBox: React.FC = () => {
                 </div>
             </div>
             ):
+
             msg?.type === "bot" && msg?.text ? (
               /* Bot message with text */
               <div className="flex gap-[20px] justify-start w-[300px] md:w-full">

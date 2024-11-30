@@ -15,7 +15,17 @@ export type Message = {
   data?: Supplier[]; // For bot responses with supplier data
   files?: File[];  // New field for attachments
   rfqs?:RFQ[] | BestQuotes[];  // bestQuotes?:BestQuotes[]
+  recentPrs?:RecentPrs[] | Workflows
 };
+
+type Workflow = string;
+type Workflows = Workflow[];
+
+
+export type RecentPrs = {
+  requestId:string,
+  title:string
+}
 
 type RFQ = {
   ID:number,
