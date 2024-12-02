@@ -55,7 +55,7 @@ function App() {
 
   // Trigger the network request when any of the states change
   useEffect(() => {
-    const create_request_endpoint = 'https://ai-feature-backend.onrender.comcreate_request';
+    const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request';
     const assign_workflow_endpoint = 'https://ai-feature-backend.onrender.com/assign_workflow';
     const check_progress_endpoint = 'http://localhost:5000/check_progress';
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq';
