@@ -11,6 +11,7 @@ export type Supplier = {
 
 export type Message = {
   type: 'user' | 'bot';
+  priorities?:string[];
   text?: string; // For user text and error messages
   data?: Supplier[]; // For bot responses with supplier data
   files?: File[];  // New field for attachments

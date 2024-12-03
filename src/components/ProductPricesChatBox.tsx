@@ -36,7 +36,7 @@ const ProductPriceChatBox: React.FC = () => {
   const [recentPrsResult, setRecentPrsResult] = useState<string | null>()
   const [bestQuoteResult, setBestQuoteResult] = useState<string | null>(null)
   const [availableWorkflowsResult, setAvailableWorkflowsResult] = useState<string | null>(null)
-
+  const [priorityResult, setPriorityResult] = useState<string | null>(null)
 
 
   const context = useContext(Context);
@@ -125,10 +125,6 @@ const ProductPriceChatBox: React.FC = () => {
       const data = await response.json();
 
       console.log(data)
-      console.log(availableWorkflowsResult)
-
-
-
 
           // Handle end of session
       if (data.exit === true) {
@@ -171,6 +167,16 @@ const ProductPriceChatBox: React.FC = () => {
           setMessages((prevMessages) => [...prevMessages, botMessage]);
         }
 
+      else if(isRequestLoading){
+        setIntroMessage(data.response.message);
+
+        const botMessage: Message = data.priorities
+        ? { type: "bot", priorities: data.priorities}
+        : { type: "bot", text: data.response}
+
+      setMessages((prevMessages) => [...prevMessages, botMessage]);
+      }
+
 
       else {
         setIntroMessage(data.message);
@@ -190,8 +196,11 @@ const ProductPriceChatBox: React.FC = () => {
         setBestQuoteResult(data.response)
       }
 
+      if(data.priorities){
+        setPriorityResult(data.response)
+      }
+
       if(data.available_workflows){
-        console.log(data.response)
         setAvailableWorkflowsResult(data.response)
       }
 
@@ -363,8 +372,21 @@ const ProductPriceChatBox: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ) :
-            msg?.type === "bot" && msg?.recentPrs ? (
+            ):msg?.type === "bot" && msg?.priorities ? (
+              <div className="flex items-start justify-start gap-5 w-full">
+                   {priorityResult && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+                   <div className="flex flex-col gap-4">
+                      {priorityResult && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{priorityResult}</p>}
+                      <div className="flex gap-2">
+                        {msg.priorities.map((priority, i) => (
+                          <p key={i} className="bg-blue-100 p-2 rounded-lg shadow-md text-sm max-w-[100px]">
+                            {priority}
+                          </p>
+                        ))}
+                      </div>
+                   </div>
+
+              </div>):msg?.type === "bot" && msg?.recentPrs ? (
               <div className="flex flex-col items-start justify-start min-w-auto gap-5">
                 {/* Intro message */}
                 {introMessage && (
