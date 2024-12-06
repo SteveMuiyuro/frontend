@@ -17,7 +17,18 @@ export type Message = {
   files?: File[];  // New field for attachments
   rfqs?:RFQ[] | BestQuotes[];  // bestQuotes?:BestQuotes[]
   recentPrs?:RecentPrs[] | Workflows
+  selectedPR?:SelectedPR
 };
+
+type SelectedPR = {
+  status: string,
+  title: string,
+  workflow: string,
+  approving_department: string,
+  actions: string[]
+  created_at: string,
+  department: string,
+}
 
 type Workflow = string;
 type Workflows = Workflow[];

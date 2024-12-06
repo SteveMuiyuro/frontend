@@ -17,6 +17,8 @@ import * as pdfjsLib from "pdfjs-dist/build/pdf";
 import Files from "./Files";
 import { Context } from "../App";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { formatDateWithSuffix } from "../helper";
+
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `/node_modules/pdfjs-dist/build/pdf.worker.mjs`;
 
@@ -37,6 +39,9 @@ const ProductPriceChatBox: React.FC = () => {
   const [bestQuoteResult, setBestQuoteResult] = useState<string | null>(null)
   const [availableWorkflowsResult, setAvailableWorkflowsResult] = useState<string | null>(null)
   const [priorityResult, setPriorityResult] = useState<string | null>(null)
+  const [selectedPRResult, setSelectedPRResult] = useState<string | null>(null)
+
+
 
 
   const context = useContext(Context);
@@ -67,14 +72,14 @@ const ProductPriceChatBox: React.FC = () => {
     const controller = new AbortController();
     setAbortController(controller);
 
-    const product_prices_endpoint = 'https://ai-feature-backend.onrender.com/product_prices'
-    const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request'
-    const assign_workflow_endpoint = 'https://ai-feature-backend.onrender.com/assign_workflow'
+    const product_prices_endpoint = 'http://localhost:5000/product_prices'
+    const create_request_endpoint = 'http://localhost:5000/create_request'
+    const assign_workflow_endpoint = 'http://localhost:5000/assign_workflow'
     const check_progress_endpoint = 'http://localhost:5000/check_progress'
     const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
-    const recommend_quotes_endpoint = 'https://ai-feature-backend.onrender.com/recommend_quotes'
+    const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
-    const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
+    const get_product_price_endpoint = 'http://localhost:5000/get_product_prices'
 
     const activeUrl = isRequestLoading
           ? create_request_endpoint
@@ -116,8 +121,6 @@ const ProductPriceChatBox: React.FC = () => {
       if(activeUrl === product_prices_endpoint){
         setActiveBackButton(true)
       }
-
-
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -167,6 +170,21 @@ const ProductPriceChatBox: React.FC = () => {
           setMessages((prevMessages) => [...prevMessages, botMessage]);
         }
 
+      else if (isCheckProgress) {
+          setIntroMessage(data.response.message);
+          console.log(selectedPRResult)
+
+          const botMessage: Message = data.recent_prs
+            ? { type: "bot", recentPrs: data.recent_prs }
+            : data.selected_PR
+            ? { type: "bot", selectedPR: data.selected_PR}
+            : { type: "bot", text: data.response}
+
+          setMessages((prevMessages) => [...prevMessages, botMessage]);
+        }
+
+
+
       else if(isRequestLoading){
         setIntroMessage(data.response.message);
 
@@ -176,7 +194,6 @@ const ProductPriceChatBox: React.FC = () => {
 
       setMessages((prevMessages) => [...prevMessages, botMessage]);
       }
-
 
       else {
         setIntroMessage(data.message);
@@ -200,6 +217,10 @@ const ProductPriceChatBox: React.FC = () => {
         setPriorityResult(data.response)
       }
 
+      if(data.selected_PR){
+        setSelectedPRResult(data.response)
+      }
+
       if(data.available_workflows){
         setAvailableWorkflowsResult(data.response)
       }
@@ -207,7 +228,6 @@ const ProductPriceChatBox: React.FC = () => {
       if(data.recent_prs){
         setRecentPrsResult(data.response)
       }
-
 
       if(data.next_prompt){
         setNextPrompt(data.next_prompt)
@@ -372,7 +392,36 @@ const ProductPriceChatBox: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ):msg?.type === "bot" && msg?.priorities ? (
+            ): msg?.type === "bot" && msg?.selectedPR ? (
+              /* Bot message with selectedPR */
+              <div className="flex flex-col gap-5 w-full">
+                <div className="flex items-start justify-start w-full gap-5">
+                {selectedPRResult && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+                <div className="flex flex-col gap-4">
+                {selectedPRResult && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{selectedPRResult}</p>}
+                  <div className="flex flex-col gap-3 p-4 bg-blue-100 rounded-lg shadow-md">
+                    <p><strong>Status:</strong> {msg.selectedPR.status}</p>
+                    <p><strong>Title:</strong> {msg.selectedPR.title}</p>
+                    {msg.selectedPR.workflow && <p><strong>Workflow Assigned:</strong> {msg.selectedPR.workflow}</p>}
+                    {msg.selectedPR.approving_department && <p><strong>Approving Department:</strong> {msg.selectedPR.approving_department}</p>}
+                    {msg.selectedPR.actions.length > 0 && <p><strong>Actions:</strong></p>}
+                    {msg.selectedPR.actions.length > 0 && (
+                          <div>
+                            <p><strong>Actions:</strong></p>
+                            <ul className="list-disc pl-5">
+                              {msg.selectedPR.actions.map((action, i) => (
+                                <li key={i}>{action}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                    <p><strong>Created At:</strong> {formatDateWithSuffix(msg.selectedPR.created_at)}</p>
+                    {msg.selectedPR.department && <p><strong>Department:</strong> {msg.selectedPR.department}</p>}
+                  </div>
+                </div>
+                </div>
+              </div>
+            ): msg?.type === "bot" && msg?.priorities ? (
               <div className="flex items-start justify-start gap-5 w-full">
                    {priorityResult && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
                    <div className="flex flex-col gap-4">
@@ -407,7 +456,7 @@ const ProductPriceChatBox: React.FC = () => {
                     {Array.isArray(msg.recentPrs) && typeof msg.recentPrs[0] === "object" && recentPrsResult && (
                       <>
                        <div className="flex items-start justify-start w-full gap-5">
-                        {recentPrsResult && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+                        {(recentPrsResult) && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
                         <div className="flex flex-col gap-4">
                         {recentPrsResult && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{recentPrsResult}</p>}
                         <div className="grid grid-cols-2 gap-4 text-sm bg-blue-100 p-4 rounded-lg md:max-w-[610px]">

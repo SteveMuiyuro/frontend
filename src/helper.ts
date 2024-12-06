@@ -26,8 +26,21 @@ type  SupplierInfo =  {
     return result;
   };
 
-  const inputString = "Supplier: Private Seller: Nkiriyehe V, Product: iPhone 13 Black color Storage 128GB, Price: RWF 430,000, Location: Kigali, Rwanda, Image: https://i.ebayimg.com/thumbs/images/g/CdwAAOSwr1Jlsn-y/s-l140.jpg";
+  export const formatDateWithSuffix = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'long' });
+    const year = date.getFullYear();
 
-  const resultObject = convertStringToObject(inputString);
+    const suffix = (day: number) => {
+      if (day > 3 && day < 21) return 'th';
+      switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+      }
+    };
 
-  console.log(resultObject);
+    return `${day}${suffix(day)} ${month} ${year}`;
+  };
