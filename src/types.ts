@@ -18,7 +18,20 @@ export type Message = {
   rfqs?:RFQ[] | BestQuotes[];  // bestQuotes?:BestQuotes[]
   recentPrs?:RecentPrs[] | Workflows
   selectedPR?:SelectedPR
+  rfqDetails?:CreatedRFQ
 };
+
+type CreatedRFQ = {
+  items: string,
+  dueDate: string,
+  description: string,
+  type: string,
+  status: string,
+  createdAt: string,
+  updatedAt: string,
+  requestId: string,
+  
+}
 
 type SelectedPR = {
   status: string,

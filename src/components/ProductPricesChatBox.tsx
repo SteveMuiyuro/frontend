@@ -40,6 +40,7 @@ const ProductPriceChatBox: React.FC = () => {
   const [availableWorkflowsResult, setAvailableWorkflowsResult] = useState<string | null>(null)
   const [priorityResult, setPriorityResult] = useState<string | null>(null)
   const [selectedPRResult, setSelectedPRResult] = useState<string | null>(null)
+  const [rfqDetailResults,setRfqDetailResults] = useState<string | null>(null)
 
 
 
@@ -76,7 +77,7 @@ const ProductPriceChatBox: React.FC = () => {
     const create_request_endpoint = 'https://ai-feature-backend.onrender.com/create_request'
     const assign_workflow_endpoint = 'https://ai-feature-backend.onrender.com/assign_workflow'
     const check_progress_endpoint = 'https://ai-feature-backend.onrender.com/check_progress'
-    const create_rfq_endpoint = 'http://localhost:5000/create_rfq'
+    const create_rfq_endpoint = 'https://ai-feature-backend.onrender.com/create_rfq'
     const recommend_quotes_endpoint = 'https://ai-feature-backend.onrender.com/recommend_quotes'
     const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
     const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
@@ -158,6 +159,18 @@ const ProductPriceChatBox: React.FC = () => {
           setMessages((prevMessages) => [...prevMessages, botMessage]);
         }
 
+        else if (isCreateRFQ) {
+          setIntroMessage(data.response.message);
+
+          const botMessage: Message = data.recent_prs
+            ? { type: 'bot', recentPrs: data.recent_prs }
+            : data.rfq_details
+            ? { type: 'bot', rfqDetails: data.rfq_details}
+            : { type: 'bot', text: data.response };
+
+          setMessages((prevMessages) => [...prevMessages, botMessage]);
+        }
+
       else if (isAssignWorkflow) {
           setIntroMessage(data.response.message);
 
@@ -227,6 +240,10 @@ const ProductPriceChatBox: React.FC = () => {
 
       if(data.recent_prs){
         setRecentPrsResult(data.response)
+      }
+
+      if(data.rfq_details){
+        setRfqDetailResults(data.response)
       }
 
       if(data.next_prompt){
@@ -392,7 +409,23 @@ const ProductPriceChatBox: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ): msg?.type === "bot" && msg?.selectedPR ? (
+            ):msg?.type === "bot" && msg?.rfqDetails ? (
+              /* Bot message with rfqDetails */
+              <div className="flex flex-col gap-5 w-full">
+                <div className="flex items-start justify-start w-full gap-5">
+                  {rfqDetailResults && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+
+                  <div className="flex flex-col gap-4">
+                  {rfqDetailResults && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{rfqDetailResults}</p>}
+                    <div className="flex flex-col gap-3 p-4 bg-blue-100 rounded-lg shadow-md">
+                      <p><strong>Items:</strong> {msg.rfqDetails.items}</p>
+                      <p><strong>Due Date:</strong> {formatDateWithSuffix(msg.rfqDetails.dueDate)}</p>
+                      <p><strong>Description:</strong> {msg.rfqDetails.description}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ):msg?.type === "bot" && msg?.selectedPR ? (
               /* Bot message with selectedPR */
               <div className="flex flex-col gap-5 w-full">
                 <div className="flex items-start justify-start w-full gap-5">
