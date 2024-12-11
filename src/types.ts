@@ -6,7 +6,7 @@ export type Supplier = {
   product_image_url: string;
   supplier_contact:string;
   email:string;
-  website:string;
+  product_url:string;
 }
 
 export type Message = {
@@ -19,6 +19,9 @@ export type Message = {
   recentPrs?:RecentPrs[] | Workflows
   selectedPR?:SelectedPR
   rfqDetails?:CreatedRFQ
+  available_quotes?:Quote[]
+  final_quote?:Quote
+
 };
 
 type CreatedRFQ = {
@@ -30,7 +33,7 @@ type CreatedRFQ = {
   createdAt: string,
   updatedAt: string,
   requestId: string,
-  
+
 }
 
 type SelectedPR = {
@@ -62,8 +65,8 @@ type Quote = {
   quantity:number,
   price:number,
   vendor:Vendor,
-  delivery_date:string
-
+  delivery_date:string,
+  id:string
 }
 
 type BestQuotes ={

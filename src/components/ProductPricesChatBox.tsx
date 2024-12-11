@@ -41,6 +41,8 @@ const ProductPriceChatBox: React.FC = () => {
   const [priorityResult, setPriorityResult] = useState<string | null>(null)
   const [selectedPRResult, setSelectedPRResult] = useState<string | null>(null)
   const [rfqDetailResults,setRfqDetailResults] = useState<string | null>(null)
+  const [availableQuotesResults,setAvailableQuotesResults] = useState<string | null>(null)
+  const [finalQuoteResults,setFinalQuoteResults] = useState<string | null>(null)
 
 
 
@@ -78,8 +80,8 @@ const ProductPriceChatBox: React.FC = () => {
     const assign_workflow_endpoint = 'https://ai-feature-backend.onrender.com/assign_workflow'
     const check_progress_endpoint = 'https://ai-feature-backend.onrender.com/check_progress'
     const create_rfq_endpoint = 'https://ai-feature-backend.onrender.com/create_rfq'
-    const recommend_quotes_endpoint = 'https://ai-feature-backend.onrender.com/recommend_quotes'
-    const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order'
+    const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes'
+    const create_purchase_order_endpoint = 'https://ai-feature-backend.onrender.com/create_purchase_order'
     const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
 
     const activeUrl = isRequestLoading
@@ -159,7 +161,21 @@ const ProductPriceChatBox: React.FC = () => {
           setMessages((prevMessages) => [...prevMessages, botMessage]);
         }
 
-        else if (isCreateRFQ) {
+      else if (isCreatePO) {
+          setIntroMessage(data.response.message);
+
+          const botMessage: Message = data.available_rfqs
+            ? { type: 'bot', rfqs: data.available_rfqs }
+            : data.available_quotes
+            ? { type: 'bot', available_quotes: data.available_quotes }
+            : data.final_quote
+            ? { type: 'bot', final_quote: data.final_quote }
+            : { type: 'bot', text: data.response };
+
+          setMessages((prevMessages) => [...prevMessages, botMessage]);
+        }
+
+      else if (isCreateRFQ) {
           setIntroMessage(data.response.message);
 
           const botMessage: Message = data.recent_prs
@@ -220,6 +236,14 @@ const ProductPriceChatBox: React.FC = () => {
 
       if(data.available_rfqs){
         setRfqsResult(data.response)
+      }
+
+      if(data.final_quote){
+        setFinalQuoteResults(data.response)
+      }
+
+      if(data.available_quotes){
+        setAvailableQuotesResults(data.response)
       }
 
       if(data.best_quotes){
@@ -409,7 +433,99 @@ const ProductPriceChatBox: React.FC = () => {
                   </div>
                 </div>
               </div>
-            ):msg?.type === "bot" && msg?.rfqDetails ? (
+            ):msg?.type === "bot" && msg?.final_quote ? (
+              <div className="flex flex-col gap-5 w-full">
+              <div className="flex items-start justify-start w-full gap-5">
+                {finalQuoteResults && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+
+                <div className="flex flex-col gap-4">
+                {finalQuoteResults && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{finalQuoteResults}</p>}
+                {msg?.type === "bot" && msg?.final_quote && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-x-10 max-w-[400px] md:max-w-[610px] text-sm bg-blue-100 p-4 rounded-lg">
+                    {/* First Row (MD and Larger) */}
+                    <div className="hidden md:block font-bold text-start">Quote ID</div>
+                    <div className="hidden md:block font-bold text-start">Vendor</div>
+                    <div className="hidden md:block font-bold text-start">Item</div>
+
+                    <div className="text-right md:text-start">{msg.final_quote.id}</div>
+                    <div className="text-right md:text-start">
+                      {msg.final_quote.vendor.firstName} {msg.final_quote.vendor.lastName}
+                    </div>
+                    <div className="text-right md:text-start">{msg.final_quote.item}</div>
+
+                    {/* Second Row (MD and Larger) */}
+                    <div className="hidden md:block font-bold text-start">Quantity</div>
+                    <div className="hidden md:block font-bold text-start">Price Per Unit</div>
+                    <div className="hidden md:block font-bold text-start">Total</div>
+
+                    <div className="text-right md:text-start">{msg.final_quote.quantity}</div>
+                    <div className="text-right md:text-start">{msg.final_quote.price}</div>
+                    <div className="text-right md:text-start">
+                      {new Intl.NumberFormat('en-US').format(
+                        msg.final_quote.quantity * msg.final_quote.price
+                      )}
+                    </div>
+
+                    {/* Delivery Date */}
+                    <div>
+                    <div className="hidden md:block font-bold text-start">Delivery Date</div>
+                    <div className="text-right md:text-start">
+                      {formatDateWithSuffix(new Date(msg.final_quote.delivery_date).toLocaleDateString())}
+                    </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              </div>
+              </div>): msg?.type === "bot" && msg?.available_quotes ? (
+              <div className="flex flex-col gap-5 w-full">
+              <div className="flex items-start justify-start w-full gap-5">
+                {availableQuotesResults && <div className="w-[32px] h-[32px] rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex flex-shrink-0 self-start"></div>}
+
+                <div className="flex flex-col gap-4">
+                {availableQuotesResults && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{availableQuotesResults}</p>}
+                {msg.available_quotes.map((result) => {
+                    if (typeof result === 'object' && 'item' in result) {
+                      const { item, quantity, price, vendor, id, delivery_date } = result;
+
+                      return (
+                        <div
+                          key={`quote-${id}`} // Use the unique `id` for the key
+                          className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-x-10 max-w-[400px] md:max-w-[610px] text-sm bg-blue-100 p-4 rounded-lg"
+                        >
+                          {/* Titles and Values for First Row (MD and Larger) */}
+                          <div className="hidden md:block font-bold text-start">Quote ID</div>
+                          <div className="hidden md:block font-bold text-start">Vendor</div>
+                          <div className="hidden md:block font-bold text-start">Item</div>
+
+                          <div className="text-right md:text-start">{id}</div>
+                          <div className="text-right md:text-start">{vendor.firstName} {vendor.lastName}</div>
+                          <div className="text-right md:text-start">{item}</div>
+
+                          {/* Titles and Values for Second Row (MD and Larger) */}
+                          <div className="hidden md:block font-bold text-start">Quantity</div>
+                          <div className="hidden md:block font-bold text-start">Price Per Unit</div>
+                          <div className="hidden md:block font-bold text-start">Total</div>
+
+                          <div className="text-right md:text-start">{quantity}</div>
+                          <div className="text-right md:text-start">{price}</div>
+                          <div className="text-right md:text-start">
+                            {new Intl.NumberFormat('en-US').format(quantity * price)}
+                          </div>
+
+                          {/* Optional Delivery Date */}
+                          <div>
+                          <div className="hidden md:block font-bold text-start">Delivery Date</div>
+                          <div className="text-right md:text-start">{formatDateWithSuffix(new Date(delivery_date).toLocaleDateString())}</div>
+                          </div>
+                        </div>
+                      );
+                      ;
+                    }
+                  })}
+                  </div>
+                    </div>
+                      </div>):msg?.type === "bot" && msg?.rfqDetails ? (
               /* Bot message with rfqDetails */
               <div className="flex flex-col gap-5 w-full">
                 <div className="flex items-start justify-start w-full gap-5">

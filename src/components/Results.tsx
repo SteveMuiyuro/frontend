@@ -39,12 +39,12 @@ function Results({ result }: ResultsProps) {
           <div className="flex justify-start items-center gap-2 max-w-[300px] md:max-w-[680px]">
             <IoIosLink className="flex flex-shrink-0" />
             <a
-              href={result.website }
+              href={result.product_url }
               target="_blank"
               className="text-sm break-words"
               style={{ wordBreak: "break-all" }}
             >
-              {result.website === "" ? "Not Available": result.website}
+              {result.product_url === "" ? "Not Available": "Product Link"}
             </a>
           </div>
         </div>

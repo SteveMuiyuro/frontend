@@ -59,8 +59,8 @@ function App() {
     const assign_workflow_endpoint = 'https://ai-feature-backend.onrender.com/assign_workflow';
     const check_progress_endpoint = 'https://ai-feature-backend.onrender.com/check_progress';
     const create_rfq_endpoint = 'https://ai-feature-backend.onrender.com/create_rfq';
-    const recommend_quotes_endpoint = 'https://ai-feature-backend.onrender.com/recommend_quotes';
-    const create_purchase_order_endpoint = 'http://localhost:5000/create_purchase_order';
+    const recommend_quotes_endpoint = 'http://localhost:5000/recommend_quotes';
+    const create_purchase_order_endpoint = 'https://ai-feature-backend.onrender.com/create_purchase_order';
     const get_product_price_endpoint = 'https://ai-feature-backend.onrender.com/get_product_prices'
 
     const fetchData = async () => {
