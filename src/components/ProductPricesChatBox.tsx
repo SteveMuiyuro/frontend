@@ -442,38 +442,45 @@ const ProductPriceChatBox: React.FC = () => {
                 {finalQuoteResults && <p className="bg-blue-100 p-[10px] mr-10 rounded-lg">{finalQuoteResults}</p>}
                 {msg?.type === "bot" && msg?.final_quote && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-x-10 max-w-[400px] md:max-w-[610px] text-sm bg-blue-100 p-4 rounded-lg">
-                    {/* First Row (MD and Larger) */}
-                    <div className="hidden md:block font-bold text-start">Quote ID</div>
-                    <div className="hidden md:block font-bold text-start">Vendor</div>
-                    <div className="hidden md:block font-bold text-start">Item</div>
+                {/* First Row (Titles and Values) */}
+                <div className="font-bold text-start">Quote ID</div>
+                <div className="text-right md:text-start">{msg.final_quote.id}</div>
+                <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
 
-                    <div className="text-right md:text-start">{msg.final_quote.id}</div>
-                    <div className="text-right md:text-start">
-                      {msg.final_quote.vendor.firstName} {msg.final_quote.vendor.lastName}
-                    </div>
-                    <div className="text-right md:text-start">{msg.final_quote.item}</div>
+                <div className="font-bold text-start">Vendor</div>
+                <div className="text-right md:text-start">
+                  {msg.final_quote.vendor.firstName} {msg.final_quote.vendor.lastName}
+                </div>
+                <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
 
-                    {/* Second Row (MD and Larger) */}
-                    <div className="hidden md:block font-bold text-start">Quantity</div>
-                    <div className="hidden md:block font-bold text-start">Price Per Unit</div>
-                    <div className="hidden md:block font-bold text-start">Total</div>
+                <div className="font-bold text-start">Item</div>
+                <div className="text-right md:text-start">{msg.final_quote.item}</div>
+                <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
 
-                    <div className="text-right md:text-start">{msg.final_quote.quantity}</div>
-                    <div className="text-right md:text-start">{msg.final_quote.price}</div>
-                    <div className="text-right md:text-start">
-                      {new Intl.NumberFormat('en-US').format(
-                        msg.final_quote.quantity * msg.final_quote.price
-                      )}
-                    </div>
+                {/* Second Row */}
+                <div className="font-bold text-start">Quantity</div>
+                <div className="text-right md:text-start">{msg.final_quote.quantity}</div>
+                <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
 
-                    {/* Delivery Date */}
-                    <div>
-                    <div className="hidden md:block font-bold text-start">Delivery Date</div>
-                    <div className="text-right md:text-start">
-                      {formatDateWithSuffix(new Date(msg.final_quote.delivery_date).toLocaleDateString())}
-                    </div>
-                    </div>
-                  </div>
+                <div className="font-bold text-start">Price Per Unit</div>
+                <div className="text-right md:text-start">{msg.final_quote.price}</div>
+                <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
+
+                <div className="font-bold text-start">Total</div>
+                <div className="text-right md:text-start">
+                  {new Intl.NumberFormat('en-US').format(
+                    msg.final_quote.quantity * msg.final_quote.price
+                  )}
+                </div>
+                <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
+
+                {/* Delivery Date */}
+                <div className="font-bold text-start">Delivery Date</div>
+                <div className="text-right md:text-start">
+                  {formatDateWithSuffix(new Date(msg.final_quote.delivery_date).toLocaleDateString())}
+                </div>
+                <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
+              </div>
                 )}
               </div>
               </div>
@@ -494,30 +501,43 @@ const ProductPriceChatBox: React.FC = () => {
                           className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-x-10 max-w-[400px] md:max-w-[610px] text-sm bg-blue-100 p-4 rounded-lg"
                         >
                           {/* Titles and Values for First Row (MD and Larger) */}
-                          <div className="hidden md:block font-bold text-start">Quote ID</div>
-                          <div className="hidden md:block font-bold text-start">Vendor</div>
-                          <div className="hidden md:block font-bold text-start">Item</div>
-
+                          <div className="font-bold text-start">Quote ID</div>
                           <div className="text-right md:text-start">{id}</div>
-                          <div className="text-right md:text-start">{vendor.firstName} {vendor.lastName}</div>
-                          <div className="text-right md:text-start">{item}</div>
+                          <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
 
-                          {/* Titles and Values for Second Row (MD and Larger) */}
-                          <div className="hidden md:block font-bold text-start">Quantity</div>
-                          <div className="hidden md:block font-bold text-start">Price Per Unit</div>
-                          <div className="hidden md:block font-bold text-start">Total</div>
-
-                          <div className="text-right md:text-start">{quantity}</div>
-                          <div className="text-right md:text-start">{price}</div>
+                          <div className="font-bold text-start">Vendor</div>
                           <div className="text-right md:text-start">
-                            {new Intl.NumberFormat('en-US').format(quantity * price)}
+                            {vendor.firstName} {vendor.lastName}
                           </div>
+                          <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
 
-                          {/* Optional Delivery Date */}
-                          <div>
-                          <div className="hidden md:block font-bold text-start">Delivery Date</div>
-                          <div className="text-right md:text-start">{formatDateWithSuffix(new Date(delivery_date).toLocaleDateString())}</div>
+                          <div className="font-bold text-start">Item</div>
+                          <div className="text-right md:text-start">{item}</div>
+                          <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
+
+                          {/* Second Row */}
+                          <div className="font-bold text-start">Quantity</div>
+                          <div className="text-right md:text-start">{quantity}</div>
+                          <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
+
+                          <div className="font-bold text-start">Price Per Unit</div>
+                          <div className="text-right md:text-start">{price}</div>
+                          <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
+
+                          <div className="font-bold text-start">Total</div>
+                          <div className="text-right md:text-start">
+                            {new Intl.NumberFormat('en-US').format(
+                              quantity * price
+                            )}
                           </div>
+                          <div className="hidden md:block"></div> {/* Empty cell for alignment on medium and above */}
+
+                          {/* Delivery Date */}
+                          <div className="font-bold text-start">Delivery Date</div>
+                          <div className="text-right md:text-start">
+                            {formatDateWithSuffix(new Date(delivery_date).toLocaleDateString())}
+                          </div>
+                          <div className="hidden md:block"></div>
                         </div>
                       );
                       ;
