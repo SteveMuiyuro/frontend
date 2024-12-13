@@ -1,7 +1,4 @@
 import File from "../components/File"
-import { BiListCheck } from "react-icons/bi";
-import { LuFileSearch } from "react-icons/lu";
-import { LuListChecks } from "react-icons/lu";
 import { LuPackageSearch } from "react-icons/lu";
 import Suggested from "../components/Suggested"
 
@@ -19,18 +16,6 @@ function Files({userName}:{userName:string}) {
 const elements = files.map((item, i) => (<File key={i} item={item} />));
 
 const suggested = [
-    {
-        title:"Summarize this page",
-        icon:<BiListCheck size={25} className="text-gray-500"/>
-    },
-    {
-       title: "Ask a question about this page",
-       icon:<LuFileSearch size={24} className="text-gray-800"/>
-    },
-    {
-       title: "Create action items",
-       icon:<LuListChecks size={24} className="text-green-700"/>
-    },
     {
         title:"Know the price of an item",
         icon:<LuPackageSearch size={24} className="text-[#822be0]"/>
